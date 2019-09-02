@@ -5,9 +5,9 @@ permalink: /blogs/
 ---
 
 <div class="blogs">
-	{%- if site.posts.size > 0 -%}
+	{%- if site.categories.blogs.size > 0 -%}
 	    <ul class="post-list">
-	      {%- for post in site.posts -%}
+	      {%- for post in site.categories.blogs -%}
 	      <li>
 	        {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
 	        <span class="post-meta">{{ post.date | date: date_format }}</span>
