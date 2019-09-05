@@ -53,3 +53,9 @@ plugins:
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
+
+# Gitalk settings
+github_client_id: e636cea1512015758e0b
+github_client_secret: 60d4dc7d40587b2a430d6301194024d1a4c47928
+github_repo: blogCmt
+github_user: JohnZhangLittle
