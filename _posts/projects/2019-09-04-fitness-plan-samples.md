@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: post_no_cmt
 title:  "Fitness plan & timer samples"
 date:   2019-09-03 00:00:00 +0800
 categories: docs
