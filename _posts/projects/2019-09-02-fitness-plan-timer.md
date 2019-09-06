@@ -3,6 +3,7 @@ layout: post
 title:  "Fitness plan & timer"
 date:   2019-09-02 00:00:00 +0800
 categories: projects
+permalink: /aboutFitnessApp
 ---
 
 # 前言
