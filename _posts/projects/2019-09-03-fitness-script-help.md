@@ -1,5 +1,5 @@
 ---
-layout: post_no_cmt
+layout: post
 title:  "Fitness plan & timer script"
 date:   2019-09-03 00:00:00 +0800
 categories: docs
