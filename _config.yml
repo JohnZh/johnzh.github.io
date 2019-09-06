@@ -21,7 +21,7 @@
 title: John Zhang
 email: kk24@qq.com
 description: >- # this means to ignore newlines until "baseurl:"
-  This is my personal blog to record my work, my life and my hobbies!
+  Code, Work and Life.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  JohnZh
