@@ -1,8 +1,9 @@
 ---
 layout: post
-title:  "Fitness plan & timer script"
+title:  "Fitness plan & timer 帮助文档"
 date:   2019-09-03 00:00:00 +0800
 categories: docs
+permalink: /fitnessAppHelp
 ---
 
 # 首先
