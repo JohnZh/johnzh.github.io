@@ -28,7 +28,7 @@ end
 
 - Line 1: Program name, **Required**
 - Line 3: R60, the global rest time, the rest time bewteen and actions, **Required**
-- Line 5, 9: the bengin and the end sign of training actions，**Required**
+- Line 5, 9: the bengin and the end sign of training actions, **Required**
 - Line 7: action script sample, **Required**, see [Action script](#action)
 
 
@@ -48,7 +48,7 @@ Action 3
 end
 {% endhighlight %}
 
-- Different with [Completed training program](#complete_training_structure)，HIIT training program has HIIT sign, HIIT sets and exercise time of single action，see line 4
+- Different with [Completed training program](#complete_training_structure), HIIT training program has HIIT sign, HIIT sets and exercise time of single action, see line 4
 - For action, name is **Required**
 - For action, notes are optional
 
@@ -67,40 +67,40 @@ Action name sets#repetition {notes} rest-time
 > The above elements are not fixed positions
 
 
-#### General sample
+#### General action sample
 ```
 Incline bench press 3#12 r30 {15kg}
 ```
 Explanation: Incline bench press. 3 sets, 12 reps each set, overwrite the rest between sets to 30 secs, notes: 15kg.
 
 
-#### Cardio sample
+#### Cardio action sample
 ```
 Jump jack 6#20s r20
 ```
 Explanation：Jump jack. 6 sets, 20 secs each set, overwrite the rest between sets to 20 secs.
 
 
-#### 复合动作举例
+#### Complex action sample
 ```
-引体向上/俯卧撑 4#10/20 
+Pull up/Push up 4#10/20 
 
-上斜仰卧起坐/开合跳 6#7/20s r20
+Decline sit ups/Jump jack 6#7/20s r20
 
-波比/卷腹 4#20s/20s
+Burpees/Reverse crunch 4#20s/20s
 
-仰卧触脚尖/卷腹/旋转 3#20s/20s/20s
-```
-
-#### 不同组不同重复次数举例
-```
-大重量杠铃卧推 6#12.10.8.5.5.5
-
-或
-
-大重量杠铃卧推 6#12.10.8.5
+Lying toe touches/Reverse crunch/Circles 3#20s/20s/20s
 ```
 
-> 未写明的组的次数，会直接用最后一组次数补全
+#### Different repetition for different set sample
+```
+Heavy bench press 6#12.10.8.5.5.5
 
-同样也支持复合组，例如：`上斜仰卧起坐/开合跳 6#20/40s.10/30s.7/20s`
+or
+
+Heavy bench press 6#12.10.8.5
+```
+
+> The set without specific repetition will be auto filled by the last repetition
+
+Complex sets are also supported. eg. `Decline sit ups/Jump jack 6#20/40s.10/30s.7/20s`
