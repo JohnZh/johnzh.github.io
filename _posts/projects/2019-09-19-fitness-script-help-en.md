@@ -71,14 +71,14 @@ Action name sets#repetition {notes} rest-time
 ```
 Incline bench press 3#12 r30 {15kg}
 ```
-Explanation: Incline bench press. 3 sets, 12 reps each set, overwrite the rest of sets to 30 secs, notes: 15kg.
+Explanation: Incline bench press. 3 sets, 12 reps each set, overwrite the rest between sets to 30 secs, notes: 15kg.
 
 
-#### 有氧动作举例
+#### Cardio sample
 ```
-开合跳 6#20s r20
+Jump jack 6#20s r20
 ```
-解释：开合跳。6 组，每组 20 秒，组间休息时间为 20 秒
+Explanation：Jump jack. 6 sets, 20 secs each set, overwrite the rest between sets to 20 secs.
 
 
 #### 复合动作举例
