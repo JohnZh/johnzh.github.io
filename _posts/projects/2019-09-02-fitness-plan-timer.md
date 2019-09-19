@@ -30,7 +30,8 @@ permalink: /aboutFitnessApp
 - 支持音效和震动的提示
 
 # 帮助文档
-[《训练脚本帮助文档》]({% post_url /projects/2019-09-03-fitness-script-help %})
+[《训练脚本帮助文档》]({% post_url /projects/2019-09-03-fitness-script-help %})  
+[《训练脚本帮助文档》英文版]({% post_url /projects/2019-09-19-fitness-script-help-en %})
 
 
 # 版本变化
