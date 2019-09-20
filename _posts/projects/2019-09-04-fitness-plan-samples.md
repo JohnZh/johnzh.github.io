@@ -1,6 +1,6 @@
 ---
 layout: post_no_cmt
-title:  "Fitness plan & timer samples"
+title:  "Program Timer Samples"
 date:   2019-09-03 00:00:00 +0800
 categories: docs
 ---

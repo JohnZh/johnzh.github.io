@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Fitness plan & timer doc"
+title:  "Program Timer Help Doc"
 date:   2019-09-03 00:00:00 +0800
 categories: docs
 permalink: /fitnessAppHelp/en
