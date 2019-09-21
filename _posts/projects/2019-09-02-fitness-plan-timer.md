@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Program Timer"
+title:  "Program Timer: 训练计时器"
 date:   2019-09-02 00:00:00 +0800
 categories: projects
 permalink: /aboutFitnessApp
