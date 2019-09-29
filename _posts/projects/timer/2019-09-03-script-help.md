@@ -1,13 +1,13 @@
 ---
 layout: post
-title:  "Fitness plan & timer 帮助文档"
+title:  "Program Timer 帮助文档"
 date:   2019-09-03 00:00:00 +0800
 categories: docs
-permalink: /fitnessAppHelp
+permalink: /timer/help
 ---
 
 # 首先
-App 里面的[训练示例]({% post_url /projects/2019-09-04-fitness-plan-samples %})展示了大部分的脚本写法。  
+App 里面的[训练示例]({% post_url /projects/timer/2019-09-04-program-samples %})展示了大部分的脚本写法。  
 长按示例，点击**查看**便可以查看脚本内容，供与参考。
 
 <a id="complete_training_structure"/>
@@ -102,4 +102,4 @@ end
 
 > 未写明的组的次数，会直接用最后一组次数补全
 
-同样也支持复合组，例如：`上斜仰卧起坐/开合跳 6#20/40s.10/30s.7/20s`
+同样也支持复合组，例如：`下斜仰卧起坐/开合跳 6#20/40s.10/30s.7/20s`

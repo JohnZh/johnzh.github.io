@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  "Program Timer: 训练计时器"
+title:  "Program Timer:  训练计划计时器"
 date:   2019-09-02 00:00:00 +0800
 categories: projects
-permalink: /aboutFitnessApp
+permalink: /timer/about
 ---
 
 # 前言
@@ -30,8 +30,8 @@ permalink: /aboutFitnessApp
 - 支持音效和震动的提示
 
 # 帮助文档
-[《训练脚本帮助文档》]({% post_url /projects/2019-09-03-fitness-script-help %})  
-[《训练脚本帮助文档》英文版]({% post_url /projects/2019-09-19-fitness-script-help-en %})
+[《训练脚本帮助文档》]({% post_url /projects/timer/2019-09-03-script-help %})  
+[《训练脚本帮助文档》英文版]({% post_url /projects/timer/2019-09-19-script-help-en %})
 
 
 # 版本变化

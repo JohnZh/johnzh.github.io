@@ -3,12 +3,12 @@ layout: post
 title:  "Program Timer Help Doc"
 date:   2019-09-03 00:00:00 +0800
 categories: docs
-permalink: /fitnessAppHelp/en
+permalink: /timer/help/en
 lang: en
 ---
 
 # First
-[**Samples**]({% post_url /projects/2019-09-04-fitness-plan-samples %}) in App has showed the most of how to write script.  
+[**Samples**]({% post_url /projects/timer/2019-09-04-program-samples %}) in App has showed the most of how to write script.  
 You can long click samples item and **check** the script content.
 
 <a id="complete_training_structure"/>

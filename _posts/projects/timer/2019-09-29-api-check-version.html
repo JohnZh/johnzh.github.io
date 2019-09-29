@@ -1,0 +1,18 @@
+---
+date:   2019-09-29 00:00:00 +0800
+categories: api
+permalink: /timer/api/checkVersion
+
+json:
+- downloadUrl : www.baidu.com
+  forceUpdateAllPreVersions : 0
+  forceUpdatePreVersions : 1.0，1.1，1.2
+  lastVersion : 2.0.0
+  modifyTime : 2019-09-29
+  platform : 0
+  remark : 备注
+  updateAllPreVersions : 0
+  updateLog : 这是一次非常重要的更新
+---
+
+{{ page.json[0] | jsonify }}
