@@ -4,6 +4,7 @@ title:  "Program Timer:  训练计划计时器"
 date:   2019-09-02 00:00:00 +0800
 categories: projects
 permalink: /timer/about
+download_url: /download/HIIT.apk
 ---
 
 # 前言
@@ -32,6 +33,10 @@ permalink: /timer/about
 # 帮助文档
 [《训练脚本帮助文档》]({% post_url /projects/timer/2019-09-03-script-help %})  
 [《训练脚本帮助文档》英文版]({% post_url /projects/timer/2019-09-19-script-help-en %})
+
+
+# 下载使用
+[{{page.title}}]({{page.download_url}})
 
 
 # 版本变化
