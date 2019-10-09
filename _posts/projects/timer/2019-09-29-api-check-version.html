@@ -3,16 +3,5 @@ date:   2019-09-29 00:00:00 +0800
 categories: api
 permalink: /timer/api/checkVersion
 
-json:
-- downloadUrl : https://johnzh.github.io/download/program-timer-2.0.0.apk
-  forceUpdateAllPreVersions : 1
-  forceUpdatePreVersions : 1.0.0
-  lastVersion : 2.0.0
-  modifyTime : 2019-10-05
-  platform : 0
-  remark : 备注
-  updateAllPreVersions : 1
-  updateLog : 这是一次强制更新
 ---
-
-{{ page.json[0] | jsonify }}
+{{ site.data.timer-update-info[0] | jsonify }}
