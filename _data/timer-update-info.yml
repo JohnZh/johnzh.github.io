@@ -8,7 +8,7 @@ remark : 备注
 updateAllPreVersions : 1
 updateLog : 这是一次强制更新
 privileges : 
-  cn: 训练计划数量无限制<br />广告开关
-  en: The number of programs is unlimited<br />The toggle for Ads
+  cn: 训练计划数量无限制\n广告开关
+  en: The number of programs is unlimited\nThe toggle for Ads
 wechat : xieela
 fee: 29
