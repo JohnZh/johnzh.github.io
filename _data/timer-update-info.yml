@@ -1,11 +1,14 @@
-- downloadUrl : https://johnzh.github.io/download/program-timer-2.0.0.apk
-  forceUpdateAllPreVersions : 1
-  forceUpdatePreVersions : 1.0.0
-  lastVersion : 2.0.0
-  modifyTime : 2019-10-05
-  platform : 0
-  remark : 备注
-  updateAllPreVersions : 1
-  updateLog : 这是一次强制更新
-  wechat : xieela
-  fee: 29
+downloadUrl : https://johnzh.github.io/download/program-timer-2.0.0.apk
+forceUpdateAllPreVersions : 1
+forceUpdatePreVersions : 1.0.0
+lastVersion : 2.0.0
+modifyTime : 2019-10-05
+platform : 0
+remark : 备注
+updateAllPreVersions : 1
+updateLog : 这是一次强制更新
+privileges : 
+  cn: 训练计划数量无限制\n广告开关
+  en: The number of programs is unlimited\nThe toggle for Ads
+wechat : xieela
+fee: 29
