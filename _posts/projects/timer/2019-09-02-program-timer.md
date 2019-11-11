@@ -36,8 +36,8 @@ download_url: /download/program-timer.apk
 
 
 # 下载使用
-{% assign updateInfo = site.data.timer-update-info[0] %}
-
+{% assign updateInfo = site.data.timer-update-info %}
+[{{page.title}}]({{ updateInfo.downloadUrl }})
 
 
 # 版本变化
