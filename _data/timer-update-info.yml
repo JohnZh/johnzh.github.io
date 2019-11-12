@@ -6,7 +6,7 @@ modifyTime : 2019-10-05
 platform : 0
 remark : 备注
 updateAllPreVersions : 1
-updateLog : 这是一次强制更新
+updateLog : 新版本日志
 privileges : 
   cn: 训练计划数量无限制
   en: The number of programs is unlimited
