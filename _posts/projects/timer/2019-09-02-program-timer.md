@@ -30,6 +30,15 @@ download_url: /download/program-timer.apk
 - 支持后台运行
 - 支持音效和震动的提示
 
+# 应用截图
+![应用截图](/assets/images/img_menu.jpeg){: width="180" float="left"}
+![应用截图](/assets/images/img_samples.jpeg){: width="180" float="left"}
+![应用截图](/assets/images/img_my_programs.jpeg){: width="180" float="left"}
+![应用截图](/assets/images/img_new_program.jpeg){: width="180" float="left"}
+![应用截图](/assets/images/img_new_action.jpeg){: width="180" float="left"}
+![应用截图](/assets/images/img_workout.jpeg){: width="180" float="left"}
+![应用截图](/assets/images/img_lock.jpeg){: width="180" float="left"}
+
 # 帮助文档
 [《训练脚本帮助文档》]({% post_url /projects/timer/2019-09-03-script-help %})  
 [《训练脚本帮助文档》英文版]({% post_url /projects/timer/2019-09-19-script-help-en %})
