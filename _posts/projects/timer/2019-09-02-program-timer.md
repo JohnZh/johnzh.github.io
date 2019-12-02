@@ -41,7 +41,7 @@ download_url: /download/program-timer.apk
 
 # 帮助文档
 [《训练脚本帮助文档》]({% post_url /projects/timer/2019-09-03-script-help %})  
-[《Training program help doc.》English verison]({% post_url /projects/timer/2019-09-19-script-help-en %})
+[《Training program script help doc.》]({% post_url /projects/timer/2019-09-19-script-help-en %})
 
 
 # 下载使用
