@@ -69,6 +69,6 @@ download_url: /download/program-timer.apk
 - 添加设置
 
 2019-12-02 v2.0.4
-- 国际化英文版本
+- 修复国际化英文版本的若干 bug
 - 训练列表简单修改
 - 添加Admob
