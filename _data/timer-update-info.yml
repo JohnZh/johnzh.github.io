@@ -1,4 +1,4 @@
-downloadUrl : https://johnzh.github.io/download/program-timer-2.0.3.apk
+downloadUrl : https://johnzh.github.io/download/program-timer-2.0.4.apk
 forceUpdateAllPreVersions : 0
 forceUpdatePreVersions : 1.0.0
 lastVersion : 2.0.3
@@ -12,4 +12,3 @@ privileges :
   en: The number of programs is unlimited
 wechat : xieela
 fee: 7
-app: free
