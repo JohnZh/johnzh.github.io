@@ -6,6 +6,8 @@ categories: projects
 permalink: /timer/about
 download_url: /download/program-timer.apk
 ---
+![置顶大图](/assets/images/img_top_big.png)
+
 
 # 前言
 早在 2017 年，我还在上班的时候，一个想法便一直困扰着我，从事 App 开发这么多年，参与过的项目近 20 个，完成度比较高的也有六七个，然而最后能留于我手机上的却一个也没有，我真的有做一些对自己，对其他人，对社会有价值的项目吗？而到了 2018 年，想做一些能让自己会一直使用的 app 的想法愈发的强烈。
