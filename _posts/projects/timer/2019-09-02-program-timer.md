@@ -3,8 +3,7 @@ layout: post
 title:  "Program Timer:  训练计划计时秒表"
 date:   2019-09-02 00:00:00 +0800
 categories: projects
-permalink: /timer/about
-download_url: /download/program-timer.apk
+permalink: /programTimer
 ---
 ![置顶大图](/assets/images/img_top_big.png)
 
