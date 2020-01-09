@@ -19,7 +19,7 @@ categories: [blogs, projects]
 
 ```
 /**
- * 统一三种类型的空格
+ * 除了回车和换行，其他空白字符都转变为半角空格
  *
  * @param str
  * @return
