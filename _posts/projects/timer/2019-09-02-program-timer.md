@@ -5,7 +5,7 @@ date:   2019-09-02 00:00:00 +0800
 categories: projects
 permalink: /programTimer
 ---
-![置顶大图](/assets/images/img_top_big.png)
+![置顶大图](/assets/images/img_top_big.png.png)
 
 
 # 前言
