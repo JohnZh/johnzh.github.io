@@ -5,7 +5,7 @@ date:   2019-09-02 00:00:00 +0800
 categories: projects
 permalink: /programTimer
 ---
-![置顶大图](/assets/images/img_top_big.png.png)
+![置顶大图](/assets/images/img_top_big.png)
 
 
 # 前言
@@ -48,9 +48,10 @@ permalink: /programTimer
 # 下载使用
 {% assign updateInfo = site.data.timer-update-info %}
 [{{page.title}}]({{ updateInfo.downloadUrl }})
+<div id="code"></div><br/>
 
 
-# 版本变化
+# 版本日志
 2019-07-25 v1.0.0:
 - 训练添加：脚本/用户界面模式
 - 训练预览，开始训练前可以先预览内容
@@ -79,3 +80,12 @@ permalink: /programTimer
 - 优化了批量导入训练的错误提示
 
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+<script src="/assets/js/jquery.qrcode.min.js"></script>
+<script type="text/javascript">
+  $("#code").qrcode({
+    width: 120,
+    height: 120,
+    text: "{{ updateInfo.downloadUrl }}"
+  });
+</script>
