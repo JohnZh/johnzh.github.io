@@ -80,7 +80,7 @@ permalink: /programTimer
 - 优化了批量导入训练的错误提示
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
+<script src="/assets/js/jquery.min-1.5.2.js"></script>
 <script src="/assets/js/jquery.qrcode.min.js"></script>
 <script type="text/javascript">
   $("#code").qrcode({
