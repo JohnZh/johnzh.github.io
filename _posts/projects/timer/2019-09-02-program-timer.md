@@ -75,7 +75,7 @@ permalink: /programTimer
 - 训练列表简单修改
 - 添加Admob
 
-2020-01-10 v2.0.6
+2020-01-10 v2.0.7
 - 修复批量导入训练的无法解析 bug
 - 优化了批量导入训练的错误提示
 
@@ -84,8 +84,9 @@ permalink: /programTimer
 <script src="/assets/js/jquery.qrcode.min.js"></script>
 <script type="text/javascript">
   $("#code").qrcode({
-    width: 120,
-    height: 120,
+    width: 200,
+    height: 200,
+    correctLevel:0,
     text: "{{ updateInfo.downloadUrl }}"
   });
 </script>
