@@ -37,8 +37,7 @@ permalink: /programTimer/en
 
 
 # Download
-{% assign updateInfo = site.data.timer-update-info %}
-[Download: {{page.title}}]({{ updateInfo.downloadUrl }})
+[Download: {{page.title}}]({{ site.url }}/programTimer/download)
 <div id="code"></div><br/>
 
 
@@ -78,6 +77,6 @@ permalink: /programTimer/en
     width: 200,
     height: 200,
     correctLevel:0,
-    text: "{{ updateInfo.downloadUrl }}"
+    text: "{{ site.url }}/programTimer/download"
   });
 </script>
