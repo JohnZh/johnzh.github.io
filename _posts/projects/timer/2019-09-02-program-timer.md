@@ -47,7 +47,7 @@ permalink: /programTimer
 
 # 下载使用
 {% assign updateInfo = site.data.timer-update-info %}
-[{{page.title}}]({{ updateInfo.downloadUrl }})
+[下载：{{page.title}}]({{ updateInfo.downloadUrl }})
 <div id="code"></div><br/>
 
 
