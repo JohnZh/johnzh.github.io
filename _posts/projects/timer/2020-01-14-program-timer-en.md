@@ -41,8 +41,6 @@ permalink: /programTimer/en
 [Download: {{page.title}}]({{ updateInfo.downloadPage }})
 <div id="code"></div><br/>
 
-{{ updateInfo.downloadPage }}
-
 
 # Versions
 2019-07-25 v1.0.0:
