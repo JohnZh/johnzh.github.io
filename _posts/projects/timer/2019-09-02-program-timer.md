@@ -50,6 +50,7 @@ permalink: /programTimer
 [下载：{{page.title}}]({{ updateInfo.downloadPage }})
 <div id="code"></div><br/>
 
+{{ updateInfo.downloadPage }}
 
 # 版本日志
 2019-07-25 v1.0.0:
@@ -87,6 +88,6 @@ permalink: /programTimer
     width: 200,
     height: 200,
     correctLevel:0,
-    text: "{{ updateInfo.downloadPage }}"
+    text: "https://johnzh.github.io/programTimer/download"
   });
 </script>
