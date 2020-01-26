@@ -11,6 +11,9 @@ permalink: /programTimer/en
 {{page.title}} is an App that combine custom training program with timer. It is designed and developed for fitness enthusiasts or senior fitness people to make their own daily training program. It supports two methods to help people make training program quickly, script and GUI, meanwhile,  workout time and rest time in action will be recognized and executed by timer. For convenience, notes for each action is developed for recording weights, tips and so on.
 
 
+# Introduction video
+<iframe width="560" height="315" src="https://www.youtube.com/embed/xKgP_G6XZC0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 # Features
 - Support HIIT and general strength training
 - Support timing for superset
