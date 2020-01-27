@@ -26,6 +26,9 @@ permalink: /programTimer
 	 您的浏览器不支持播放
 </video>
 
+#### 备用地址
+<iframe height="315" width="560" src="http://player.youku.com/embed/XNDUxOTgyNjQ3Mg==" frameborder="0" allowfullscreen></iframe>
+
 
 # 功能说明
 - 支持 HIIT 和常规力量训练两种训练类型
