@@ -20,6 +20,13 @@ permalink: /programTimer
 {{page.title}} 是结合了自定义训练计划与计时跑秒的一款 App。专门为了健身爱好者或者资深健身人士用于制作自己每日，每周，甚至更久的训练计划而设计开发。提供了脚本编写和用户界面两种方式帮助你快速生成每日不同的健身计划，并可识别计划中的动作运动时间和休息时间从而进行计时操作，同时也为单个动作提供了备注功能，可用于记录重量，提示等信息，方便实用。
 
 
+# 介绍视频
+<video width="560" height="315" controls>
+	 <source src="http://q4rb3xaw7.bkt.clouddn.com/adVideoCn.mp4" type="video/mp4">
+	 您的浏览器不支持播放
+</video>
+
+
 # 功能说明
 - 支持 HIIT 和常规力量训练两种训练类型
 - 支持复合动作计时模式
