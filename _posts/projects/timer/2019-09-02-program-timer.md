@@ -27,7 +27,7 @@ permalink: /programTimer
 </video>
 
 #### 备用地址
-<iframe height="315" width="560" src="http://player.youku.com/embed/XNDUxOTgyNjQ3Mg==" frameborder="0" allowfullscreen></iframe>
+<iframe height="315" width="560" src="https://player.youku.com/embed/XNDUxOTgyNjQ3Mg==" frameborder="0" allowfullscreen></iframe>
 
 
 # 功能说明
