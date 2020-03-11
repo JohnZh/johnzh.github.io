@@ -363,7 +363,7 @@ An endpoint MAY send a PRIORITY frame in this state to reprioritize the reserved
 
 > Either endpoint can send a RST_STREAM frame from this state, causing it to transition immediately to "closed".
 
-在"打开"状态下的流可以被所有的端点使用，并且发送任何类型的帧。在这z种状态下，发送数据的端点会观察着广播中的流级别流控制限制消息([Section 5.2](#))。
+在"打开"状态下的流可以被所有的端点使用，并且发送任何类型的帧。在这种状态下，发送数据的端点会准守流级别流量控制的限制([Section 5.2](#))。
 
 自这个状态下，任何端点发送设有 END_STREAM 标志的帧，都会造成流转变成一个"半关闭"状态。一个端点发送一个  END_STREAM 标志会导致流状态变成"半关闭(local)"状态；而另一个接收到到 END_STREAM 标志的会导致流状态变成"半关闭(remote)"状态。
 
@@ -385,7 +385,7 @@ An endpoint MAY send a PRIORITY frame in this state to reprioritize the reserved
 
 当流收到一个标志为 END_STREAM 的帧或者任一端点发生了 RST_STREAM 帧，流会从这个状态转变为"关闭"状态。
 
-在这个状态下，端点能接收到任何类型的帧。为了持续接收流控制帧，使用 WINDOW_UPDATE 帧来提供流控制信用是必要的。在这个状态下，接收者能忽略 WINDOW_UPDATE 帧，而此类帧也许会在一个承载了 END_STREAM 标志的帧发出后的短期内到达。
+在这个状态下，端点能接收到任何类型的帧。为了持续接收流量控制帧，使用 WINDOW_UPDATE 帧来提供流量控制信用是必要的。在这个状态下，接收者能忽略 WINDOW_UPDATE 帧，而此类帧也许会在一个承载了 END_STREAM 标志的帧发出后的短期内到达。
 
 在这个状态下，收到的 PRIORITY 帧会被用于变更流的优先级，而这些流依赖于这个被标识的流
 
@@ -401,9 +401,11 @@ An endpoint MAY send a PRIORITY frame in this state to reprioritize the reserved
 
 半关闭(remote)：
 
-状态是"半关闭(remote)" 的流将不会再被用于发送帧。在这个状态下，端点将不再有义务维护啊一个接受者的流控制窗口。
+状态是"半关闭(remote)" 的流将不会再被用于发送帧。在这个状态下，端点将不再有义务维护啊一个接受者的流量控制窗口。
 
-如果端点接收格外的帧，而不是 WINDOW_UPDATE，PRIORITY，或者 RST_STREAM，对于为此状态下的流来说，必须响应成类型为 STREAM_CLOSED 的流错误([Section 5.2](#))
+如果端点接收格外的帧，而不是 WINDOW_UPDATE，PRIORITY，或者 RST_STREAM，对于为此状态下的流来说，必须响应成类型为 STREAM_CLOSED 的流错误([Section 5.4.2](#))
+
+处于"半关闭(remote)"状态下的流可以被端点用于发送任何类型的帧。这种状态下，端点应该继续准守流级别流量控制限制([Section 5.2](#))。
 
 通过发送包含 END_STREAM 标志的帧或者任一端点发送 RST_STREAM 帧，流可以从这个状态转变为"关闭"状态。
 
@@ -411,7 +413,43 @@ An endpoint MAY send a PRIORITY frame in this state to reprioritize the reserved
 
 > The "closed" state is the terminal state.
 
+> An endpoint MUST NOT send frames other than PRIORITY on a closed stream. An endpoint that receives any frame other than PRIORITY after receiving a RST_STREAM MUST treat that as a stream error (Section 5.4.2) of type STREAM_CLOSED. Similarly, an endpoint that receives any frames after receiving a frame with the END_STREAM flag set MUST treat that as a connection error (Section 5.4.1) of type STREAM_CLOSED, unless the frame is permitted as described below.
 
+> WINDOW_UPDATE or RST_STREAM frames can be received in this state for a short period after a DATA or HEADERS frame containing an END_STREAM flag is sent. Until the remote peer receives and processes RST_STREAM or the frame bearing the END_STREAM flag, it might send frames of these types. Endpoints MUST ignore WINDOW_UPDATE or RST_STREAM frames received in this state, though endpoints MAY choose to treat frames that arrive a significant time after sending END_STREAM as a connection error (Section 5.4.1) of type PROTOCOL_ERROR.
+
+> PRIORITY frames can be sent on closed streams to prioritize streams that are dependent on the closed stream. Endpoints SHOULD process PRIORITY frames, though they can be ignored if the stream has been removed from the dependency tree (see Section 5.3.4).
+
+> If this state is reached as a result of sending a RST_STREAM frame, the peer that receives the RST_STREAM might have already sent — or enqueued for sending — frames on the stream that cannot be withdrawn. An endpoint MUST ignore frames that it receives on closed streams after it has sent a RST_STREAM frame. An endpoint MAY choose to limit the period over which it ignores frames and treat frames that arrive after this time as being in error.
+
+> Flow-controlled frames (i.e., DATA) received after sending RST_STREAM are counted toward the connection flow-control window. Even though these frames might be ignored, because they are sent before the sender receives the RST_STREAM, the sender will consider the frames to count against the flow-control window.
+
+> An endpoint might receive a PUSH_PROMISE frame after it sends RST_STREAM. PUSH_PROMISE causes a stream to become "reserved" even if the associated stream has been reset. Therefore, a RST_STREAM is needed to close an unwanted promised stream.
+
+关闭：
+
+"关闭" 状态是终结状态。
+
+端点在关闭状态的流上不能发送除 PRIORITY 以外的帧。端点在收到 RST_STREAM 帧后如果依然接收到了除 PRIORITY 以外的帧，则必须作为 STREAM_CLOSED 类型的流错误对待([Section 5.4.2](#))。同样的，端点在收到带有 END_STREAM 标志的帧之后再收到任何帧，则则必须作为 STREAM_CLOSED 类型的连接错误对待([Section 5.4.1](#))，除非如下描述的这些被允许的帧。
+
+在这个状态下，端点发送在包含 END_STREAM 标志 DATA 和 HEADERS 帧发送后的一小短时间内，都可以接收 WINDOW_UPDATE 或者 RST_STREAM 帧。直到远端端点接收并处理完 RST_STREAM 或者承载着 END_STREAM 标志的帧之前，端点都可以发送这些类型的帧。尽管端点也许会把那些在发送了 END_STREAM 之后一段时间内到达的帧当做 PROTOCOL_ERROR 类型连接错误([Section 5.4.1](#))，但是在这个状态下端点肯定会忽略 收到的 WINDOW_UPDATE 或者 RST_STREAM 帧。
+
+PRIORITY 帧可以在关闭的流上发送用来给依赖于这个关闭流的其他流设置优先级。端点应该处理 PRIORITY 帧，尽管在流已经从依赖树(见 [Section 5.3.4](#))移除的情况下 PRIORITY 帧可以被忽略。
+
+如果已经由于发送了 RST_STREAM 而变成这个状态，那么接收了 RST_STREAM 的端点已经发送的，或者正在发送的，都在流上了的这些帧都是不能退出的。发送了 RST_STREAM 的端点必须忽略那些关闭的流上的帧。端点可以选择设置超时时间，超过超时时间后会忽略帧并把它们作为错误处理。
+
+在发送了 RST_STREAM 后收到的流量控制帧(例如 DATA)都被会计入连接流量控制窗口。尽管这些帧可以被被忽略，因为他们是被发送于发送者接收到 RST_STREAM 之前，但是发送者会认为这些帧不利于流量控制窗口。
+
+端点在发送了 RST_STREAM 后也许会收到 PUSH_PROMISE 帧。PUSH_PROMISE 会造成流变成 "保留" 状态，即便关联的流已经被重置。因此，RST_STREAM 用于关闭一个不需要的流是需要的。
+
+> In the absence of more specific guidance elsewhere in this document, implementations SHOULD treat the receipt of a frame that is not expressly permitted in the description of a state as a connection error (Section 5.4.1) of type PROTOCOL_ERROR. Note that PRIORITY can be sent and received in any stream state. Frames of unknown types are ignored.
+
+> An example of the state transitions for an HTTP request/response exchange can be found in Section 8.1. An example of the state transitions for server push can be found in Sections 8.2.1 and 8.2.2.
+
+文档中缺乏特殊说明的，某个状态的描述中关于帧的接收没有明确允许的，这些实现方式应该采用作为 PROTOCOL_ERROR 类型的连接错误([Section 5.4.1](#))来处理。注意，PRIORITY 帧可以在任何流状态下被发送或者接收。未知的帧类型应该被忽略。
+
+HTTP 请求/响应过程中状态转变的例子可以在 Section 8.1 里面找到。服务器推送的状态转变的例子可以在 Sections 8.2.1 和 8.2.2 里面找到。
+
+### 5.1.1. 流标识符
 
 ## 5.2. 流量控制
 
