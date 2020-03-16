@@ -18,6 +18,8 @@ categories: [translation]
 11. IANA 考虑
 12. 相关阅读
 
+> Last-Modify: 2020-03-16
+
 
 # 摘要 (Abstract)
 
@@ -300,13 +302,13 @@ The order in which frames are sent on a stream is significant. Recipients proces
 
 > Receiving any frame other than HEADERS or PRIORITY on a stream in this state MUST be treated as a connection error (Section 5.4.1) of type PROTOCOL_ERROR.
 
-所有的流都从"空闲"状态开始：
+所有的流都从 "空闲" 状态开始：
 
-下面的这些从"空闲"状态开始的转变是合法的：
+下面的这些从 "空闲" 状态开始的转变是合法的：
 
-- 发送或者接受一个 HEADERS 帧会造成流变成"打开"状态。流标示描述在[Section 5.1.1](#)。相同的 HEADERS 帧也能造成流马上变成"半关闭"状态。
-- 在另一个流上发送一个 PUHS_PROMISE 帧同时保留这个空闲的被标示过的用于后续使用的流。这个被保留的流的状态会转变为"保留(local)"。
-- 在另一个流上接收到一个 PUSH_PROMISE 帧同时保留这个空闲的被标示过的用于后续使用的流。这个被保留的流的状态会转变为"保留(remote)"。
+- 发送或者接受一个 HEADERS 帧会造成流变成 "打开" 状态。流标示描述在[Section 5.1.1](#)。相同的 HEADERS 帧也能造成流马上变成 "半关闭" 状态。
+- 在另一个流上发送一个 PUHS_PROMISE 帧同时保留这个空闲的被标示过的用于后续使用的流。这个被保留的流的状态会转变为 "保留(local)"。
+- 在另一个流上接收到一个 PUSH_PROMISE 帧同时保留这个空闲的被标示过的用于后续使用的流。这个被保留的流的状态会转变为 "保留(remote)"。
 - 要注意的是 PUHS_PROMOSE 帧不会在空闲流上发送，但是在 Promised Stream ID 字段上会参考这个最新保留的流。
 
 流在空闲状态下接收到任何不是 HEADERS 或者 PRIORITY 的帧必须被当成 PROTOCOL_ERROR 类型的连接错误([Section 5.4.1](#))来处理
@@ -329,7 +331,7 @@ An endpoint MUST NOT send any type of frame other than HEADERS, RST_STREAM, or P
 
 在这个状态下，只有下列转变是可能的：
 
-端点可以发送 HEADERS 帧。这会造成流打开到一个"半关闭(remote)"状态。任何一个端点都可以发送 RST_STREAM 帧来使得这个流变成"关闭"状态。这是释放流的保留。一个端点不能在这个状态下发送任何不是 HEADERS，RST_STREAM，或者是 PRIORITY 的帧。
+端点可以发送 HEADERS 帧。这会造成流打开到一个 "半关闭(remote)" 状态。任何一个端点都可以发送 RST_STREAM 帧来使得这个流变成 "关闭" 状态。这是释放流的保留。一个端点不能在这个状态下发送任何不是 HEADERS，RST_STREAM，或者是 PRIORITY 的帧。
 
 在这个状态下，可能会收到 PRIORITY 或者 WINDOW_UPDATE 帧。流在这个状态下收到任何不是 RST_STREAM，PRIORITY，或者 WINDOW_UPDATE 类型的帧都必须被当做是 PROTOCOL_ERROR 类型的连接错误([Secion 5.4.1](#))。
 
@@ -351,7 +353,7 @@ An endpoint MAY send a PRIORITY frame in this state to reprioritize the reserved
 
 这个状态下，只有下面的转变是可能的：
 
-接收到 HEADERS 帧会造成流转变为"半关闭(local)"状态。任一端点都可以发送 RST_STREAM 帧来使得这个流变成"关闭"状态。这是释放流的保留。在这个状态下端点可能会发生一个 PRIORITY 帧来变更这个保留的流的优先级。端点不能在这个状态下发送任何不是 HEADERS，RST_STREAM，或者是 PRIORITY 的帧。
+接收到 HEADERS 帧会造成流转变为 "半关闭(local)" 状态。任一端点都可以发送 RST_STREAM 帧来使得这个流变成 "关闭" 状态。这是释放流的保留。在这个状态下端点可能会发生一个 PRIORITY 帧来变更这个保留的流的优先级。端点不能在这个状态下发送任何不是 HEADERS，RST_STREAM，或者是 PRIORITY 的帧。
 
 流在这个状态下收到任何不是 HEADERS，RST_STREAM，或者 PRIORITY 类型的帧都必须被当做是 PROTOCOL_ERROR 类型的连接错误([Secion 5.4.1](#))。
 
@@ -363,11 +365,11 @@ An endpoint MAY send a PRIORITY frame in this state to reprioritize the reserved
 
 > Either endpoint can send a RST_STREAM frame from this state, causing it to transition immediately to "closed".
 
-在"打开"状态下的流可以被所有的端点使用，并且发送任何类型的帧。在这种状态下，发送数据的端点会准守流级别流量控制的限制([Section 5.2](#))。
+在 "打开" 状态下的流可以被所有的端点使用，并且发送任何类型的帧。在这种状态下，发送数据的端点会准守流级别流量控制的限制([Section 5.2](#))。
 
-自这个状态下，任何端点发送设有 END_STREAM 标志的帧，都会造成流转变成一个"半关闭"状态。一个端点发送一个  END_STREAM 标志会导致流状态变成"半关闭(local)"状态；而另一个接收到到 END_STREAM 标志的会导致流状态变成"半关闭(remote)"状态。
+自这个状态下，任何端点发送设有 END_STREAM 标志的帧，都会造成流转变成一个 "半关闭" 状态。一个端点发送一个  END_STREAM 标志会导致流状态变成 "半关闭(local)" 状态；而另一个接收到到 END_STREAM 标志的会导致流状态变成 "半关闭(remote)" 状态。
 
-自这个状态下，任一端点都能发送 RST_STREAM 帧都会造成状态马上转变为"关闭"状态。
+自这个状态下，任一端点都能发送 RST_STREAM 帧都会造成状态马上转变为 "关闭" 状态。
 
 > half-closed (local):
 
@@ -383,7 +385,7 @@ An endpoint MAY send a PRIORITY frame in this state to reprioritize the reserved
 
 流在半关闭(local)下不能用于发送除了 WINDOW_UPDATE，PRIORITY，RST_STREAM 以外的帧
 
-当流收到一个标志为 END_STREAM 的帧或者任一端点发生了 RST_STREAM 帧，流会从这个状态转变为"关闭"状态。
+当流收到一个标志为 END_STREAM 的帧或者任一端点发生了 RST_STREAM 帧，流会从这个状态转变为 "关闭" 状态。
 
 在这个状态下，端点能接收到任何类型的帧。为了持续接收流量控制帧，使用 WINDOW_UPDATE 帧来提供流量控制信用是必要的。在这个状态下，接收者能忽略 WINDOW_UPDATE 帧，而此类帧也许会在一个承载了 END_STREAM 标志的帧发出后的短期内到达。
 
@@ -401,13 +403,13 @@ An endpoint MAY send a PRIORITY frame in this state to reprioritize the reserved
 
 半关闭(remote)：
 
-状态是"半关闭(remote)" 的流将不会再被用于发送帧。在这个状态下，端点将不再有义务维护啊一个接受者的流量控制窗口。
+状态是 "半关闭(remote)" 的流将不会再被用于发送帧。在这个状态下，端点将不再有义务维护啊一个接受者的流量控制窗口。
 
 如果端点接收格外的帧，而不是 WINDOW_UPDATE，PRIORITY，或者 RST_STREAM，对于为此状态下的流来说，必须响应成类型为 STREAM_CLOSED 的流错误([Section 5.4.2](#))
 
-处于"半关闭(remote)"状态下的流可以被端点用于发送任何类型的帧。这种状态下，端点应该继续准守流级别流量控制限制([Section 5.2](#))。
+处于 "半关闭(remote)" 状态下的流可以被端点用于发送任何类型的帧。这种状态下，端点应该继续准守流级别流量控制限制([Section 5.2](#))。
 
-通过发送包含 END_STREAM 标志的帧或者任一端点发送 RST_STREAM 帧，流可以从这个状态转变为"关闭"状态。
+通过发送包含 END_STREAM 标志的帧或者任一端点发送 RST_STREAM 帧，流可以从这个状态转变为 "关闭" 状态。
 
 > closed:
 
@@ -450,8 +452,80 @@ PRIORITY 帧可以在关闭的流上发送用来给依赖于这个关闭流的�
 HTTP 请求/响应过程中状态转变的例子可以在 Section 8.1 里面找到。服务器推送的状态转变的例子可以在 Sections 8.2.1 和 8.2.2 里面找到。
 
 ### 5.1.1. 流标识符
+> Streams are identified with an unsigned 31-bit integer. Streams initiated by a client MUST use odd-numbered stream identifiers; those initiated by the server MUST use even-numbered stream identifiers. A stream identifier of zero (0x0) is used for connection control messages; the stream identifier of zero cannot be used to establish a new stream.
+
+> HTTP/1.1 requests that are upgraded to HTTP/2 (see Section 3.2) are responded to with a stream identifier of one (0x1). After the upgrade completes, stream 0x1 is "half-closed (local)" to the client. Therefore, stream 0x1 cannot be selected as a new stream identifier by a client that upgrades from HTTP/1.1.
+
+> The identifier of a newly established stream MUST be numerically greater than all streams that the initiating endpoint has opened or reserved. This governs streams that are opened using a HEADERS frame and streams that are reserved using PUSH_PROMISE. An endpoint that receives an unexpected stream identifier MUST respond with a connection error (Section 5.4.1) of type PROTOCOL_ERROR.
+
+流由 31 位无符号整数标示。客户端初始化的流必须使用奇数标识符；服务端初始化的必须使用偶数标识符。使用 0 (0x0) 标识符的流用于连接控制信息；0 流标识符不能用于建立新流。
+
+HTTP/1.1 用于升级到 HTTP/2 的请求 (见 [Section 3.2](#)) 会使用 1 (0x1) 的标识符来响应。在升级完成后，流 0x1 对于客户端来说是 "半关闭(local)" 的。因此，流 0x1 不会客户端选择作为一个新的流标识符来用于升级 HTTP/1.1。
+
+最新建立的流标识符必须是数字上大于所有端点已经打开或者保留的所有流。控制流的是使用 HEADERS 帧打开的，而流的保留则使用 PUSH_PROMISE。端点在收到意料意外的流标识符的时候必须使用 PROTOCL_ERROR 类型的连接错误([Section 5.4.1](#))进行响应。
+
+> The first use of a new stream identifier implicitly closes all streams in the "idle" state that might have been initiated by that peer with a lower-valued stream identifier. For example, if a client sends a HEADERS frame on stream 7 without ever sending a frame on stream 5, then stream 5 transitions to the "closed" state when the first frame for stream 7 is sent or received.
+
+> Stream identifiers cannot be reused. Long-lived connections can result in an endpoint exhausting the available range of stream identifiers. A client that is unable to establish a new stream identifier can establish a new connection for new streams. A server that is unable to establish a new stream identifier can send a GOAWAY frame so that the client is forced to open a new connection for new streams.
+
+新流标识符的首次使用会含蓄地关闭掉端点使用较低数字流标识符初始化的状态是 "空闲" 状态的所有流。举个例子，如果客户端在流 7 上发送了一个 HEADERS 帧，且不曾在流 5 上发送过一帧，接着流 5 会在流 7 上的第一帧被发送或者被接收到的时候转变成 "关闭" 状态。
+
+流标识符不能被重用。长期存在的连接会导致端点耗尽可用的流标识符。客户端无法创建新流标识符时候可以为新流创建一个新连接。服务端无法创建新流标识符的时候可以发送一个 GOWAY 帧，这样客户端就会被迫为新流打开一个新连接。
+
+### 5.1.2. 流并发性
+> A peer can limit the number of concurrently active streams using the SETTINGS_MAX_CONCURRENT_STREAMS parameter (see Section 6.5.2) within a SETTINGS frame. The maximum concurrent streams setting is specific to each endpoint and applies only to the peer that receives the setting. That is, clients specify the maximum number of concurrent streams the server can initiate, and servers specify the maximum number of concurrent streams the client can initiate.
+
+对等端可以在 SETTINGS 帧中使用 SETTINGS_MAX_CONCURRENT_STREAMS 参数来限制并发且活跃的流的数量。最大的并发的流的设置是针对每个端点的，并且只会应用到接收到设置的的对等端上。这也就是说，客户端可以指定服务端能初始化的并发流的最大值，服务端能指定客户端能初始化的并发流的最大值。
+
+> Streams that are in the "open" state or in either of the "half-closed" states count toward the maximum number of streams that an endpoint is permitted to open. Streams in any of these three states count toward the limit advertised in the SETTINGS_MAX_CONCURRENT_STREAMS setting. Streams in either of the "reserved" states do not count toward the stream limit.
+
+"打开" 或者 "半关闭" 状态下的流都被会计入端点允许打开的流的最大数量里面。任何这三种状态的流都会被计入到 SETTINGS_MAX_CONCURRENT_STREAMS 设置中。任一 "保留" 状态下的流都不会计入到流限制中。
+
+> Endpoints MUST NOT exceed the limit set by their peer. An endpoint that receives a HEADERS frame that causes its advertised concurrent stream limit to be exceeded MUST treat this as a stream error (Section 5.4.2) of type PROTOCOL_ERROR or REFUSED_STREAM. The choice of error code determines whether the endpoint wishes to enable automatic retry (see Section 8.1.4) for details).
+
+端点不能超过它们对等端设置的限制。端点接收到 HEADERS 帧并造成它并发流限制超出必须作为一个 PROTOCOL_ERROR 或者 REFUSED_STREAM 类型的流错误对待 ([Section 5.4.2](#))。错误码的选择决定了端点是否希望允许自动重试 (详情见[Section 8.1.4](#))。
+
+> An endpoint that wishes to reduce the value of SETTINGS_MAX_CONCURRENT_STREAMS to a value that is below the current number of open streams can either close streams that exceed the new value or allow streams to complete.
+
+端点减少 SETTINGS_MAX_CONCURRENT_STREAMS 的值以至于低于当前打开的流的数量，这会导致超出这个新值的流的关闭或者允许流关闭。
 
 ## 5.2. 流量控制
+
+> Using streams for multiplexing introduces contention over use of the TCP connection, resulting in blocked streams. A flow-control scheme ensures that streams on the same connection do not destructively interfere with each other. Flow control is used for both individual streams and for the connection as a whole.
+
+> HTTP/2 provides for flow control through use of the WINDOW_UPDATE frame (Section 6.9).
+
+使用流进行多路复用导致 TCP 连接的争抢使用，从而导致流阻塞。流量控制机制确保流在相同的连接上不会破坏性的互相干扰。流量控制适用于单独的流以及整个连接
+
+HTTP/2 通过 WINDOW_UPDATE 帧的使用来提供流量控制([Setion 6.9](#))
+
+### 5.2.1. 流量控制原则
+
+> HTTP/2 stream flow control aims to allow a variety of flow-control algorithms to be used without requiring protocol changes. Flow control in HTTP/2 has the following characteristics:
+
+HTTP/2 流量控制的目的是在不需要协议改变的情况下允许使用各种流量控制算法。HTTP/2 中流量控制有以下特点：
+
+> 1. Flow control is specific to a connection. Both types of flow control are between the endpoints of a single hop and not over the entire end-to-end path.
+> 2. Flow control is based on WINDOW_UPDATE frames. Receivers advertise how many octets they are prepared to receive on a stream and for the entire connection. This is a credit-based scheme.
+> 3. Flow control is directional with overall control provided by the receiver. A receiver MAY choose to set any window size that it desires for each stream and for the entire connection. A sender MUST respect flow-control limits imposed by a receiver. Clients, servers, and intermediaries all independently advertise their flow-control window as a receiver and abide by the flow-control limits set by their peer when sending.
+> 4. The initial value for the flow-control window is 65,535 octets for both new streams and the overall connection.
+> 5. The frame type determines whether flow control applies to a frame. Of the frames specified in this document, only DATA frames are subject to flow control; all other frame types do not consume space in the advertised flow-control window. This ensures that important control frames are not blocked by flow control.
+> 6. Flow control cannot be disabled.
+> 7. HTTP/2 defines only the format and semantics of the WINDOW_UPDATE frame (Section 6.9). This document does not stipulate how a receiver decides when to send this frame or the value that it sends, nor does it specify how a sender chooses to send packets. Implementations are able to select any algorithm that suits their needs.
+
+1. 流量控制是针对连接的。所有类型的流量控制都是在单跳端点之间，而非全部的端到端路径。
+2. 流量控制基于 WINDOW_UPDATE 帧。接收者广播他们准备在一个 流上以及整个连接上接收多少字节。这是一个以信用为基础的机制。
+3. 流量控制由接收端完全控制，具有方向性。接收端也许会为每个流以及整个连接设置任意窗口大小。发送端必须尊重接收端实行的流量控制范围。客户端，服务器以及中间代理都会作为接收端独立广播他们的流量控制窗口，并且在发送数据的时候准守他们的对等端设置的流量控制范围。
+4. 所有新的流以及整个连接的流量控制窗口初始值是 65535 字节。
+5. 帧的类型决定流量控制是否适用于该帧。本文档定义的帧中，只有 DATA 帧受到流量控制限制。所有其他帧类型不会消耗流量窗口空间。这确保了重要的控制帧不会被流量控制所阻塞。
+6. 流量控制不会被无效化。
+7. HTTP/2 只定义了 WINDOW_UPDATE 帧的格式和语义([Section 6.9](#))。文档没有规定接受端如何决定何时发送此帧或者该发送此帧的什么值，也没有规定发送端如何选择发送包。具体实现可根据发送接收端的需要选择任意算法。
+
+> Implementations are also responsible for managing how requests and responses are sent based on priority, choosing how to avoid head-of-line blocking for requests, and managing the creation of new streams. Algorithm choices for these could interact with any flow-control algorithm.
+
+具体实现还需要负责管理如何基于优先级进行请求和响应的发送，选择如何避免请求的队头阻塞，以及管理新的流的创建。满足这些的算法选择能够与任何流量控制算法互相作用。
+
+### 5.2.2. 流量控制的正确使用
 
 ## 5.3. 流的优先级
 
