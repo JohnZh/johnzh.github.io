@@ -15,7 +15,7 @@ categories: [blogs]
 	<ul>
 	 	{%- for java_post in site.categories.java -%}
 	 	<li>
-        	<a href="{{ tech_post.url | relative_url }}">
+        	<a href="{{ java_post.url | relative_url }}">
         		{{ java_post.title | escape }}
         	</a>
 	 	</li>
@@ -30,7 +30,7 @@ categories: [blogs]
 	<ul>
 	 	{%- for android_post in site.categories.android -%}
 	 	<li>
-        	<a href="{{ tech_post.url | relative_url }}">
+        	<a href="{{ android_post.url | relative_url }}">
         		{{ android_post.title | escape }}
         	</a>
 	 	</li>
