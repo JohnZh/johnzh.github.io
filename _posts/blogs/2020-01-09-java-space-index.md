@@ -1,8 +1,8 @@
 ---
-layout: post
+layout: post_no_cmt
 title:  "Java：明明有空格 indexOf 却是 -1"
 date:   2019-09-09 00:00:00 +0800
-categories: [blogs, projects]
+categories: [projects, java]
 ---
 
 # 问题描述

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "互联网老兵碎片知识记录"
+title:  "互联网老兵的知识碎片"
 date:   2020-02-02 00:00:00 +0800
 permalink: /internet/fragment
 categories: [blogs]

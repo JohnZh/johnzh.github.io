@@ -1,8 +1,8 @@
 ---
-layout: post
+layout: post_no_cmt
 title:  "Android 开发：矢量图"
 date:   2019-09-09 00:00:00 +0800
-categories: [blogs, android]
+categories: android
 ---
 
 # 起因
