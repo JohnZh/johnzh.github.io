@@ -526,8 +526,95 @@ HTTP/2 流量控制的目的是在不需要协议改变的情况下允许使用�
 具体实现还需要负责管理如何基于优先级进行请求和响应的发送，选择如何避免请求的队头阻塞，以及管理新的流的创建。满足这些的算法选择能够与任何流量控制算法互相作用。
 
 ### 5.2.2. 流量控制的正确使用
+> Flow control is defined to protect endpoints that are operating under resource constraints. For example, a proxy needs to share memory between many connections and also might have a slow upstream connection and a fast downstream one. Flow-control addresses cases where the receiver is unable to process data on one stream yet wants to continue to process other streams in the same connection.
 
-## 5.3. 流的优先级
+流量控制的定义是为了在资源受限的条件下保护端点的操作。举个例子，一个代理需要在多个连接之间共享内存，同时也可能存在一个缓慢上流连接和一个快速的下流连接。流量控制能处理一个接收者在同一个连接上无法在一个流上处理数据，然而想要继续处理其他流的情况。
+
+> Deployments that do not require this capability can advertise a flow-control window of the maximum size (2^31-1) and can maintain this window by sending a WINDOW_UPDATE frame when any data is received. This effectively disables flow control for that receiver. Conversely, a sender is always subject to the flow-control window advertised by the receiver.
+
+> Deployments with constrained resources (for example, memory) can employ flow control to limit the amount of memory a peer can consume. Note, however, that this can lead to suboptimal use of available network resources if flow control is enabled without knowledge of the bandwidth-delay product (see [RFC7323]).
+
+> Even with full awareness of the current bandwidth-delay product, implementation of flow control can be difficult. When using flow control, the receiver MUST read from the TCP receive buffer in a timely fashion. Failure to do so could lead to a deadlock when critical frames, such as WINDOW_UPDATE, are not read and acted upon.
+
+服务部署并不需要这个能力，而是只要能广播一个最大值(2^31-1)的流量控制窗口以及在收到任何数据的时候能通过发送 WINDOW_UPDATE 帧来维护窗口就行。 这实际上是无效化了接收端的流量控制，相反的发送端需要一直服从接收端广播的流量控制窗口。
+
+受限资源(例如，内存)的服务部署能采用流量控制来限制对等端消耗的内存数量。注意，但是在缺乏带宽延时积(见 [RFC7323])的了解下启动流量控制也会导致可用网络资源无法被最佳利用。
+
+甚至当在完全了解了当前带宽延时积的情况下，流量控制的具体实现也是非常复杂的。当使用流量控制时，接收端必须及时地从 TCP 接受缓冲区读取。失败将会导致关键帧死锁，例如 WINDOW_UPDATE 不被读取和实施。
+
+## 5.3. 流优先级
+
+> A client can assign a priority for a new stream by including prioritization information in the HEADERS frame (Section 6.2) that opens the stream. At any other time, the PRIORITY frame (Section 6.3) can be used to change the priority of a stream.
+
+> The purpose of prioritization is to allow an endpoint to express how it would prefer its peer to allocate resources when managing concurrent streams. Most importantly, priority can be used to select streams for transmitting frames when there is limited capacity for sending.
+
+客户端能通过使用包含优先级信息的 HEADERS 帧([Section 6.2](#))来打开新流的同时分配其优先级。在任何时候，PRIORITY 帧([Section 6.3](#))都能被用于改变流的优先级。
+
+优先级的目的是在于允许让端点表达它更希望它的对等端在管理并发流的时候如何分配资源。更重要的是，在用于发送的容量有限的情况下，能利用优先级来选择用于传送帧的流。
+
+> Streams can be prioritized by marking them as dependent on the completion of other streams (Section 5.3.1). Each dependency is assigned a relative weight, a number that is used to determine the relative proportion of available resources that are assigned to streams dependent on the same stream.
+
+> Explicitly setting the priority for a stream is input to a prioritization process. It does not guarantee any particular processing or transmission order for the stream relative to any other stream. An endpoint cannot force a peer to process concurrent streams in a particular order using priority. Expressing priority is therefore only a suggestion.
+
+> Prioritization information can be omitted from messages. Defaults are used prior to any explicit values being provided (Section 5.3.5).
+
+流可以通过将它们标记成依赖于其他流的完成的方式([Section 5.3.1](#))来赋予优先级。每个依赖会被分配一个相对的权重，会用一个数字来决定依赖于相同流的其他流上可用资源分配的相对比例。
+
+流的优先级明确设置是优先级处理的输入。这不保证这个流相对于其他任何流来说会特殊的处理以及特殊的传输顺序。端点使用优先级不能强制对等端使用一个特殊顺序来处理并发流。因此优先级表达仅仅是一个建议。
+
+消息中优先级信息能被忽略的。默认值会先于任何提供的明确的值使用([Section 5.3.5](#))。
+
+### 5.3.1. 流依赖
+> Each stream can be given an explicit dependency on another stream. Including a dependency expresses a preference to allocate resources to the identified stream rather than to the dependent stream.
+
+> A stream that is not dependent on any other stream is given a stream dependency of 0x0. In other words, the non-existent stream 0 forms the root of the tree.
+
+每个流都可以显式地依赖另一个流。流包含依赖性表明在资源分配上这个特定的流比其所依赖的流具备更高优先权。
+
+没有依赖其他流的流会被赋予 0x0 的流依赖性。换句话说，这个不存在的流 0 形成了依赖树的根。
+
+> A stream that depends on another stream is a dependent stream. The stream upon which a stream is dependent is a parent stream. A dependency on a stream that is not currently in the tree — such as a stream in the "idle" state — results in that stream being given a default priority (Section 5.3.5).
+
+一个流依赖于其他流，这个流就是从属流。被依赖的流是父辈流。具备从属关系的流，单却不在依赖树上，例如流处于 "空闲" 状态，这会导致流被赋予一个默认的优先级([Section 5.3.5](#))。
+
+> When assigning a dependency on another stream, the stream is added as a new dependency of the parent stream. Dependent streams that share the same parent are not ordered with respect to each other. For example, if streams B and C are dependent on stream A, and if stream D is created with a dependency on stream A, this results in a dependency order of A followed by B, C, and D in any order.
+
+当分配一个依赖关系到另外一个流上，这个流就会作为父辈流新从属而被添加。分享相同父辈的从属流不被要求互相尊重。例如，如果流 B 和 C 都依赖于流 A，并且流 D 带着对流 A 的依赖关系被创建，这会导致 A 被 B，C，D 以任何顺序依赖。
+
+```
+    A                 A
+   / \      ==>      /|\
+  B   C             B D C
+
+Figure 3: Example of Default Dependency Creation
+图 3：默认依赖关系创建的例子
+```
+> An exclusive flag allows for the insertion of a new level of dependencies. The exclusive flag causes the stream to become the sole dependency of its parent stream, causing other dependencies to become dependent on the exclusive stream. In the previous example, if stream D is created with an exclusive dependency on stream A, this results in D becoming the dependency parent of B and C.
+
+转一性标志允许插入一个新的依赖关系层。转一性标志造成了流对其父辈流的单独依赖，同时也造成了其他依赖变成了依赖于这个专一性的流。在前一个例子中，如果流 D 创建的时候带有一个专一性的依赖，且依赖于流 A，那么这会导致流 D 变成 B 和 C 的依赖父辈。
+
+
+```
+                      A
+    A                 |
+   / \      ==>       D
+  B   C              / \
+                    B   C
+Figure 4: Example of Exclusive Dependency Creation
+图 4：专一性依赖创建的例子
+```
+
+> Inside the dependency tree, a dependent stream SHOULD only be allocated resources if either all of the streams that it depends on (the chain of parent streams up to 0x0) are closed or it is not possible to make progress on them.
+
+> A stream cannot depend on itself. An endpoint MUST treat this as a stream error (Section 5.4.2) of type PROTOCOL_ERROR.
+
+在依赖树中，一个从属流应该只会在它所依赖的所有流(父辈流到流 0x0 的链)都关闭或者不可能在更进一步发展的情况下被分配资源。
+
+流不能依赖它自己。端点必须对待这种情况为一个 PROTOCOL_ERROR 类型的流错误([Section 5.4.2](#))。
+
+### 5.3.2. 依赖权重
+
+### 5.3.3. 优先级重组
 
 ## 5.4. 错误处理
 
