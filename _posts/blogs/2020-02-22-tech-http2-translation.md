@@ -613,8 +613,49 @@ Figure 4: Example of Exclusive Dependency Creation
 流不能依赖它自己。端点必须对待这种情况为一个 PROTOCOL_ERROR 类型的流错误([Section 5.4.2](#))。
 
 ### 5.3.2. 依赖权重
+> All dependent streams are allocated an integer weight between 1 and 256 (inclusive).
+
+> Streams with the same parent SHOULD be allocated resources proportionally based on their weight. Thus, if stream B depends on stream A with weight 4, stream C depends on stream A with weight 12, and no progress can be made on stream A, stream B ideally receives one-third of the resources allocated to stream C.
+
+所有的从属流都会被分配一个整数型的权重，范围[1,256]
+
+相同父辈的流的资源分配应该根据它们的权重按比例分配。因此，如果流 B 权重 4 依赖流 A，流 C 权重 12 依赖流 A，且流 A 没有进展了，流 B 理论上分配的资源是流 C 的三分之一。
 
 ### 5.3.3. 优先级重组
+
+> Stream priorities are changed using the PRIORITY frame. Setting a dependency causes a stream to become dependent on the identified parent stream.
+
+> Dependent streams move with their parent stream if the parent is reprioritized. Setting a dependency with the exclusive flag for a reprioritized stream causes all the dependencies of the new parent stream to become dependent on the reprioritized stream.
+
+> If a stream is made dependent on one of its own dependencies, the formerly dependent stream is first moved to be dependent on the reprioritized stream's previous parent. The moved dependency retains its weight.
+
+使用 PRIORITY 帧可以改变流的权重。在流上设置一个依赖关系会使其依赖于特定的父辈流。
+
+如果父辈流优先级重组那么从属流会随着它们父辈流进行改变。在一个优先级重组流上设置一个带有专一性标志的依赖关系会造成它新的父辈流的所有从属流都变成依赖它。
+
+如果一个流被要求依赖它自己的一个从属流，那么先前的从属流会先移动它的依赖到这个优先级重组流之前的父辈流上。这个移动的依赖的权限保持不变。
+
+> For example, consider an original dependency tree where B and C depend on A, D and E depend on C, and F depends on D. If A is made dependent on D, then D takes the place of A. All other dependency relationships stay the same, except for F, which becomes dependent on A if the reprioritization is exclusive.
+
+举个例子，这是一个原始的依赖树，B 和 C 依赖 A，D 和 E 依赖 C，F 依赖 D。如果 A 被要求依赖 D，那么 D 会替代 A 的位置，其他的依赖关系保持不变。但如果这个优先级重组是带有专一性标志的，那么除了 F 会变成依赖 A，其他关系依旧不变
+
+
+```
+    x                x                x                 x
+    |               / \               |                 |
+    A              D   A              D                 D
+   / \            /   / \            / \                |
+  B   C     ==>  F   B   C   ==>    F   A       OR      A
+     / \                 |             / \             /|\
+    D   E                E            B   C           B C F
+    |                                     |             |
+    F                                     E             E
+               (intermediate)   (non-exclusive)    (exclusive)
+Figure 5: Example of Dependency Reordering
+图 5：依赖重排序的例子
+```
+
+## 5.3.4. 优先级状态管理
 
 ## 5.4. 错误处理
 
