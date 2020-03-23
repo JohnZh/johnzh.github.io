@@ -1,7 +1,7 @@
 ---
 layout: post_no_cmt
 title:  "10 个 Java 基础知识点"
-date:   2020-03-23 06:00:00 +0800
+date:   2016-05-12 06:00:00 +0800
 categories: [java]
 ---
 # 1. final/finally/finalize
