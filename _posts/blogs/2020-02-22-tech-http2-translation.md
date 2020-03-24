@@ -4,6 +4,7 @@ title:  "HTTP/2 说明书翻译(部分)"
 date:   2020-02-02 00:00:00 +0800
 categories: [translation, tech]
 ---
+
 # 目录
 1. 介绍 (Introduction)
 2. HTTP/2 协议概述 (HTTP/2 Protocol Overview)
@@ -656,8 +657,59 @@ Figure 5: Example of Dependency Reordering
 ```
 
 ## 5.3.4. 优先级状态管理
+> When a stream is removed from the dependency tree, its dependencies can be moved to become dependent on the parent of the closed stream. The weights of new dependencies are recalculated by distributing the weight of the dependency of the closed stream proportionally based on the weights of its dependencies.
+
+当流从依赖树移除的时候，它的从属流都会被移动且变成依赖于这个关闭的流的父辈。这些新的依赖关系的权重会根据从属流原本对关闭流的依赖权重以及分配个关闭流的依赖权重重新计算。
+
+> Streams that are removed from the dependency tree cause some prioritization information to be lost. Resources are shared between streams with the same parent stream, which means that if a stream in that set closes or becomes blocked, any spare capacity allocated to a stream is distributed to the immediate neighbors of the stream. However, if the common dependency is removed from the tree, those streams share resources with streams at the next highest level.
+
+流从依赖树上移除会造成一些优先级信息的丢失。拥有相同父辈流的流之间资源是共享的，这意味着如果集合中一个流关闭或者变成阻塞，任何闲置容量就会被分配给其最接近的邻居流。但是如果从属流的共用依赖被移除，那么那些流只能和更高层的流共享资源。
+
+> For example, assume streams A and B share a parent, and streams C and D both depend on stream A. Prior to the removal of stream A, if streams A and D are unable to proceed, then stream C receives all the resources dedicated to stream A. If stream A is removed from the tree, the weight of stream A is divided between streams C and D. If stream D is still unable to proceed, this results in stream C receiving a reduced proportion of resources. For equal starting weights, C receives one third, rather than one half, of available resources.
+
+举个例子，假设流 A 和 B 共享一个父辈，流 C 和 D 依赖流 A。移除流 A 之前，如果流 A 和 D 都无法处理事务，那么流 C 会接收所有专用于流 A 的资源。如果流 A 从依赖树移除，流 A 的权重会被分到流 C 和 D 上。如果流 D 依然无法处理事务，这会导致流 C 接收到的资源比例减少。为了起始权重的平等，C 会接收三分之一的可用资源，而非一半。
+
+> It is possible for a stream to become closed while prioritization information that creates a dependency on that stream is in transit. If a stream identified in a dependency has no associated priority information, then the dependent stream is instead assigned a default priority (Section 5.3.5). This potentially creates suboptimal prioritization, since the stream could be given a priority that is different from what is intended.
+
+流有可能在优先级信息还在对流创建依赖关系的时候就关闭。如果一个依赖关系中，一个特定的流没有相关的优先权信息，那么它的从属流会被分配默认的优先权([Section 5.3.5](#))。这可能会导致优先级关系不是最佳的，因为流可能赋予一个不同于它期望的优先权。
+
+> To avoid these problems, an endpoint SHOULD retain stream prioritization state for a period after streams become closed. The longer state is retained, the lower the chance that streams are assigned incorrect or default priority values.
+
+为了避免这些问题，端点应该在流关闭后的一段时间里保留流优先级状态。越长的优先级状态被保留，流被分配不正确或者默认优先权值的可能性就越低。
+
+> Similarly, streams that are in the "idle" state can be assigned priority or become a parent of other streams. This allows for the creation of a grouping node in the dependency tree, which enables more flexible expressions of priority. Idle streams begin with a default priority (Section 5.3.5).
+
+类似的，"空闲"状态下的流能被分配优先权或者变成其他流的父辈。这允许了依赖树中分组节点的产生，意味着更灵活的优先权表达。空闲流会以默认优先权开始([Section 5.3.5](#)
+
+> The retention of priority information for streams that are not counted toward the limit set by SETTINGS_MAX_CONCURRENT_STREAMS could create a large state burden for an endpoint. Therefore, the amount of prioritization state that is retained MAY be limited.
+
+流优先权信息的保留不会被计入到 SETTINGS_MAX_CONCURRENT_STREAMS 设置的限制里面，这会对端点造成非常大状态负担。因此，被保留的优先级状态的数量也许是受限的。
+
+> The amount of additional state an endpoint maintains for prioritization could be dependent on load; under high load, prioritization state can be discarded to limit resource commitments. In extreme cases, an endpoint could even discard prioritization state for active or reserved streams. If a limit is applied, endpoints SHOULD maintain state for at least as many streams as allowed by their setting for SETTINGS_MAX_CONCURRENT_STREAMS. Implementations SHOULD also attempt to retain state for streams that are in active use in the priority tree.
+
+端点可以根据负载来决定保留优先级状态额外的的数量；在高负载下，为了限制资源，优先级状态可以被丢弃。在极端的情况下，端点甚至可以为了激活或者保留流而丢弃优先级状态。如果实施了限制，那么端点应该保留至少和 SETTINGS_MAX_CONCURRENT_STREAMS 设置大小一样的流状态。具体实现中也应该试着保留那些在依赖树中被积极使用的流的状态。
+
+> If it has retained enough state to do so, an endpoint receiving a PRIORITY frame that changes the priority of a closed stream SHOULD alter the dependencies of the streams that depend on it.
+
+如果已经有了足够多的状态来这样做，那么在端点接收到改变关闭的流的优先权的 PRIORITY 帧的时候就应该也一起改变依赖它的从属流。
+
+### 5.3.5. 默认优先级
+> All streams are initially assigned a non-exclusive dependency on stream 0x0. Pushed streams (Section 8.2) initially depend on their associated stream. In both cases, streams are assigned a default weight of 16.
+
+所有流在最初都会被分配一个无专一性的依赖关系到流 0x0 上。推送流([Section 8.2](#)) 最初会依赖它们的关联流。这两种有情况下，流都会分配一个默认值为 16 的权重。
 
 ## 5.4. 错误处理
+> HTTP/2 framing permits two classes of error:
+> - An error condition that renders the entire connection unusable is a connection error.
+> - An error in an individual stream is a stream error.
+
+> A list of error codes is included in Section 7.
+
+HTTP/2 框架允许两类错误：
+- 导致整个连接不可用的这种错误情况为连接错误
+- 错误发生在单独流里为是流错误
+
+[Section 7](#) 包含了一个错误代码列表。
 
 ## 5.5. Extending HTTP/2
 
