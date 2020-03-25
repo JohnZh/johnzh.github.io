@@ -4,7 +4,10 @@ title:  "Android：Lrucache 原理与小记"
 date:   2016-05-21 06:00:00 +0800
 categories: [android, java]
 ---
+Lrucache 小记与原理
+
 # 算法
+
 Lru：Last recently used 最近最少使用，即在固定的大小限制下，缓存的 put 和 get 过程中，当 size 超过 maxSize，优先删除那些最久没有访问过的或访问量小的缓存。
 
 # 原理
@@ -55,7 +58,7 @@ transient LinkedHashMapEntry<K,V> tail;
 ## LinkedHashmap 补充
 - 继承 Hashmap，内部实现依旧是节点数组 + 节点链表 的散列表结构
 - 静态内部类 Entry 继承 Hashmap.Node，实现节点的双向链表结构
-- 后期又在节点数组后加入了红黑树结构
+- 后期又在节点数组后加入了红黑树结构，是指是 Hashmap 加入的这个结构，LinkedHashmap 继承了
 
 # 使用
 - put/get 缓存的写和读
@@ -73,21 +76,13 @@ LruCache<String, Bitmap> bitmapCache = new LruCache<String, Bitmap>(cacheSize) {
 ```
 - 下面几种情况下需要主动去释放缓存或者做其他处理的需要重载 `entryRemoved(boolean, K, V, V).`：（evicted 参数是否由于空间不足而需移除老数据）
 
-	- 缓存的在 put 的时候发生替换的时候 (evicted = false)
-	- 在缓存总大小超出限制而需要移除老缓存的时候 (evicted = true)，这又细分 4 个情况：
-		- put 时候超出限制
-		- get 时候发生 cache miss，然后用 create(K) 创建值插入后超出限制
-		- resize(maxSize) 重新设置最大容量时候
-		- evictAll 移除所有缓存的时候，实际是调用 trimToSize(-1)，把 maxSize 临时改成 -1 然后把所有缓存都已超出最大容量方式移除
-	- 在主动移除缓存的时候 (evicted = false)
-	- 多线程操作 cache 的时候，利用 create(K) 创造了一个值，但是发现其他线程已经对这个 key 缓存了数据，缓存冲突，需要移除 create(K) 创造了一个值 (evicted = false)
+  - 缓存的在 put 的时候发生替换的时候 (evicted = false)
+  - 在缓存总大小超出限制而需要移除老缓存的时候 (evicted = true)，这又细分 4 个情况：
+    - put 时候超出限制
+    - get 时候发生 cache miss，然后用 create(K) 创建值插入后超出限制
+    - resize(maxSize) 重新设置最大容量时候
+    - evictAll 移除所有缓存的时候，实际是调用 trimToSize(-1)，把 maxSize 临时改成 -1 然后把所有缓存都已超出最大容量方式移除
+  - 在主动移除缓存的时候 (evicted = false)
+  - 多线程操作 cache 的时候，利用 create(K) 创造了一个值，但是发现其他线程已经对这个 key 缓存了数据，缓存冲突，需要移除 create(K) 创造了一个值 (evicted = false)
 
 - 当访问缓存，cache miss 的时候，需要统计 miss，甚至直接存入并返回一个值，重载`create(K)`
-
-
-
-
-
-
-
-
