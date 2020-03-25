@@ -58,5 +58,5 @@ IP 地址分配|BOOTP，DHCP|UDP
 ### 挥手
 1. Client --- FIN M ---> Server
 2. Client <--- ACK M + 1 --- Server
-3. Client <--- FIN N ---> Server
+3. Client <--- FIN N --- Server
 4. Client --- ACK N + 1 ---> Server
