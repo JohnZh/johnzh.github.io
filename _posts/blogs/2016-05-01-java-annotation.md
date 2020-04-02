@@ -246,4 +246,4 @@ private static String getConstraints(Constraint constraint) {
 ```
 
 # 注解处理与 APT
-见[《Java：注解解析与 APT》](#)
+见[《Android：Java 注解解析与 APT》]({% post_url /blogs/2020-03-20-java-apt %})
