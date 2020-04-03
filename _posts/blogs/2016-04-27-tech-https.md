@@ -4,6 +4,7 @@ title:  "HTTPS，SSL/TLS，数字证书"
 date:   2016-04-27 00:00:00 +0800
 categories: [tech]
 ---
+最后修改：2018-04-03
 
 # HTTPS 
 
@@ -42,60 +43,81 @@ HTTPS：HyperText Transfer Protocol Secure
 
 版本间的区别多为密码学相关内容，例如算法的替换，新增算法支持，不展开
 
-## TLS/SSL 握手 (时间序)
+## TLS 基础握手
 
 #### 1. Client -> Server
-- Client 生成随机数
-- 发送 ClientHello 消息到 Server
+- Client 发送 `"ClientHello"` 消息到 Server
 
 ```
 ClientHello:
-- 协议版本，如 TLS 1.0
-- 随机数 RN，稍后用于生成“会话秘钥”
-- 支持的加密算法(列表)，如 RSA 公钥加密
+- TLS 最高协议版本，如 TLS 1.2
+- 随机数，用于生成 "会话秘钥"
+- 支持的加密套件列表，如 RSA，DH，DHE
 - 支持的压缩算法
 ```
 
 #### 2. Server -> Client
-- Server 生成随机数
-- 发送 ServerHello 消息到 Client
+- Server 发送 `"ServerHello"` 消息到 Client
 
 ```
 ServerHello:
-- 确认使用的协议版本，如 TLS 1.0，如果支持版本不一致，Server 会关闭加密通信
-- Server 的随机数 RN，稍后用于生成“会话秘钥”
-- 确认使用的加密算法，如 RSA 公钥加密
-- Server 证书(含公钥："server public key")
+- 确定的协议版本 (选双方都支持的最高版本)
+- 随机数
+- 确定的加密套件
+- 确定的压缩算法
 ```
-- 请求 Client 证书
+- Server 发送 `"Certificate"` 消息，含 Server 证书 (含公钥 *serverPublicKey*)，该步骤可能会由于加密套件的不同而被 Server 省略
+- Server 发送 `"ServerKeyExchange"` 消息，该步骤可能会由于加密套件的不同而被 Server 省略，选择 DHE 和 DH_ANON 加密套件都会发送该消息
+- Server 发送 `" ServerHelloDone"` 消息
+
+#### 3. Client -> Server
 - Client 验证 Server 证书有效性
 
 > 验证 Server 证书有效性：如果证书不是可信机构颁布，或者证书中的域名与实际域名不一致，或者证书已过期，访问者会被显示一个警告，选择是否还要继续通信
 
-#### 3. Client -> Server
-- Client 发送证书(含公钥：`"client public key"`) 到 Server，没有证书可使用 "**随机生成的公钥**"
-- 假如有证书，Server 验证 Client 证书有效性
-- Client 使用私钥：`"client private key"`签名此前发送过的所有信息，并发送到 Server
-- Server 对来自 Client 签名过的内容进行验签和 hash 检查 (相关内容见[数字签名](#digital_signature))，这也是对客户端身份的验证
-- Clinet 生成最后一个随机数 pre-master-secret，用 `"server public key"` 加密后发送到 Server
-- Server 使用 `"server private key"` 解密得 pre-master-secret
-- Client 和 Server 都有三个随机数，并基于随机数和之前协商的加密算法得出 master-secret
-，即“会话密钥”
-- Client 发出密码改变通知，表示随后的消息都会使用协商的加密方式和 master-secret 秘钥来发送
-- Client 发出握手结束通知
+- Client 发送 `"ClientKeyExchange"` 消息，包含 PreMasterSecret ，公钥 *clientPublicKey*，或者什么也没有，取决于选中的加密套件。PreMasterSecret 会被 Server 证书里面的公钥加密过。
+- Server 通过 *serverPrivateKey* 解密得 PreMasterSecret，Client 和 Server 使用之前的随机数和 PreMasterSecret 计算出 MasterSecret：MS，作为对称加密秘钥
+- Client 发送 `"ChangeCipherSpec"` 记录，告诉 Server 从现在开始发送内容都会被验证(以及被加密)。
+
+> ChangeCipherSpec 其实已经是 TLS 记录层协议内容，Content type 字段值为 20 (0x14)
+
+- Client 发送一个被验证过且被加密过的 `"Finish"` 消息，包含了之前握手消息的 Hash 值和 Mac 值
+
+- Server 会解密 Clinet 的 `"Finish"` 信息，并验证 Hash 值和 Mac 值。如果解密或者验证失败，连接会结束。
 
 #### 4. Server -> Client
-- Server 发出密码改变通知，表示随后的消息都会使用协商的加密方式和 master-secret 秘钥来发送
-- Server 发出握手结束通知
+
+- Server 也会发出 `"ChangeCipherSpec"`，告诉 Client 从现在开始发送内容都会被验证(以及被加密) 
+- Server 发送它的被验证过且被加密过的 `"Finish"` 消息
+- Client 进行和之前 Server 同样的解密和验证。
+
+## TLS 双向认证握手
+
+步骤 1 与基础握手一致
+
+#### 2. Server -> Client
+- `"ServerHello"`
+- `"Certificate"`
+- `"ServerKeyExchange"`，该步骤可能会由于加密套件的不同而被 Server 省略，选择 DHE 和 DH_ANON 加密套件都会发送该消息
+- Server 发送 `"CertificateRequest"` 消息，请求 Client 的证书做双向认证
+- `" ServerHelloDone"`
+
+#### 3. Client -> Server
+- Client 验证 Server 证书有效性
+- Client 发送 `"Certificate"` 消息响应 Server 的证书请求，消息包含 Client 的证书 (包含 *clientPublicKey*)
+- Client 发送 `"ClientKeyExchange"` 消息，包含 PreMasterSecret，公钥 *clientPublicKey*，或者什么也没有，取决于选中的加密套件。PreMasterSecret 会被 Server 证书里面的公钥加密过。
+- Client 发送 `"CertificateVerify"` 消息，这是使用 Client 证书私钥 *clientPrivateKey* 签名之前握手消息而得到的[数字签名](#digital_signature)，Server 可以用 *clientPublicKey* 验签。验签让 Server 知道 Client 能访问其证书的权力以及拥有该证书
+- Server 通过 *serverPrivateKey* 解密得 PreMasterSecret，Client 和 Server 使用之前的随机数和 PreMasterSecret 计算出 MasterSecret：MS，作为对称加密秘钥
+- `"ChangeCipherSpec"` 记录
+- `"Finish"`
 
 ## 握手过程知识点小结
 握手过程中使用到了非对称加密(公钥-私钥对)
-
-1. Client 用 `"client private key"` 签名之前发送的消息，Server 用 `"client public key"` 验签
-2. Client 用 `"server public key"` 加密 pre-master-secret，Server 用 `"server private key"` 解密获得 pre-master-secret
+1. Client 用 *serverPublicKey* 加密 PreMasterSecret，Server 用 *serverPrivateKey* 解密获得 PreMasterSecret
+2. Client 用其证书的 *clientPrivateKey* 签名之前发送的消息，Server 用 *clientPublicKey* 验签
 3. CA 证书有效性验证上也使用了非对称加密技术
 
-对称加密会在之后传输数据时使用，密钥为握手过程产生的 **master-secret**。这也称为 TLS/SSL 的记录层 (**Record Layouer**)
+对称加密会在之后传输数据时使用，密钥为握手过程产生的 MS。这也称为 TLS/SSL 的记录层 (**Record Layouer**)
 
 > 这也突出了非对称加密和对称加密的特点：
 > - 非对称加密加密和解密花费时间较长，速度相对较慢，适合少量数据
