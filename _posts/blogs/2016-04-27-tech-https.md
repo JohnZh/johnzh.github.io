@@ -4,7 +4,7 @@ title:  "HTTPS，SSL/TLS，数字证书"
 date:   2016-04-27 00:00:00 +0800
 categories: [tech]
 ---
-最后修改：2018-04-03
+Last modified：2018-04-04
 
 # HTTPS 
 
@@ -93,7 +93,7 @@ ServerHello:
 
 ## TLS 双向认证握手
 
-步骤 1 与基础握手一致
+#### 1. 与基础握手一致
 
 #### 2. Server -> Client
 - `"ServerHello"`
@@ -110,6 +110,8 @@ ServerHello:
 - Server 通过 *serverPrivateKey* 解密得 PreMasterSecret，Client 和 Server 使用之前的随机数和 PreMasterSecret 计算出 MasterSecret：MS，作为对称加密秘钥
 - `"ChangeCipherSpec"` 记录
 - `"Finish"`
+
+#### 4. 与基础握手一致
 
 ## 握手过程知识点小结
 握手过程中使用到了非对称加密(公钥-私钥对)
