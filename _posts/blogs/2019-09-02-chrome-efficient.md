@@ -12,7 +12,7 @@ categories: [blogs]
 ---|---|---
 Picture in Picture for every website|所有网站的视频都能画中画，打开其他软件的时候，画中画依然在最前面|
 Dualsub|Youtube 上下两行双语字幕，需要打开字幕开关|
-一键管理扩展|一个列表显示所有的插件，开关卸载都很方便|
+扩展管理|一个列表显示所有的插件，开关卸载都很方便| [webstore](https://chrome.google.com/webstore/detail/%E6%89%A9%E5%B1%95%E7%AE%A1%E7%90%86/jijileelaefjahodboljljdgfpbjjlac/related?hl=zh-CN)
 Astar VPN chrome store|免费的 VPN，网速一般，总比没有强|
 Undo closed tabs|查看关闭的标签页，支持快捷键|
 Tab organizer|标签页整理，按类排个序|
