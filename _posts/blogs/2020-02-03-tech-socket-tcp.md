@@ -2,7 +2,7 @@
 layout: post
 title:  "Socket、TCP、UDP 碎片记录"
 date:   2020-02-02 00:00:00 +0800
-categories: [tech]
+categories: [network]
 ---
 
 # 什么是 Socket

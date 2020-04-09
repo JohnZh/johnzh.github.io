@@ -2,7 +2,7 @@
 layout: post
 title:  "HTTPS，SSL/TLS，数字证书"
 date:   2016-04-27 00:00:00 +0800
-categories: [tech]
+categories: [network]
 ---
 Last modified：2018-04-04
 

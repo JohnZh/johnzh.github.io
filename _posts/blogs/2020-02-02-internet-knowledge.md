@@ -11,9 +11,9 @@ categories: [blogs]
 
 # 正文
 <div>
-	{%- if site.categories.tech.size > 0 -%}
+	{%- if site.categories.network.size > 0 -%}
 	<ul>
-	 	{%- for tech_post in site.categories.tech -%}
+	 	{%- for tech_post in site.categories.network -%}
 	 	<li>
         	<a href="{{ tech_post.url | relative_url }}">
         		{{ tech_post.title | escape }}

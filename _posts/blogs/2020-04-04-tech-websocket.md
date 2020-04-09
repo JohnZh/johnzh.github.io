@@ -2,7 +2,7 @@
 layout: post
 title:  "Websocket"
 date:   2020-04-04 00:00:00 +0800
-categories: [tech]
+categories: [network]
 ---
 
 # 背景

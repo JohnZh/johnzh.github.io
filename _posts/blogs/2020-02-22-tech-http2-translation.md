@@ -2,7 +2,7 @@
 layout: post_no_cmt
 title:  "HTTP/2 说明书翻译(部分)"
 date:   2020-02-02 00:00:00 +0800
-categories: [translation, tech]
+categories: [translation, network]
 ---
 
 # 目录
