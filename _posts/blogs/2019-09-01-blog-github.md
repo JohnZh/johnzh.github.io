@@ -2,7 +2,7 @@
 layout: post_no_cmt
 title:  "使用 github pages & jekyll 搭建个人博客"
 date:   2019-09-01 00:06:00 +0800
-categories: blogs
+categories: []
 ---
 
 # 技术
