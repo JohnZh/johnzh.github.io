@@ -97,13 +97,13 @@ t1.interrupt();
 
 // output
 java.lang.InterruptedException: sleep interrupted
-	at java.lang.Thread.sleep(Native Method)
-	at com.john.purejava.MyCode$1.run(MyCode.java:29)
-	at java.lang.Thread.run(Thread.java:748)
+    at java.lang.Thread.sleep(Native Method)
+    at com.john.purejava.MyCode$1.run(MyCode.java:29)
+    at java.lang.Thread.run(Thread.java:748)
 isInterrupted: false
 ```
 ### 抛出 InterruptedException 的方法
-对于一个会抛出 InterruptedException 的方法，一般来说肯定是阻塞方法
+对于一个会抛出 InterruptedException 的方法，一般来说是阻塞方法
 
 什么是阻塞方法？
 将线程从就绪状态变成阻塞状态的方法，线程调用该方法后，需要一个外部条件，才能让线程重新恢复到就绪状态。
@@ -113,3 +113,27 @@ isInterrupted: false
 - Thread#join 当前线程上，对另一个线程对象 t 进行 t#john 的调用，那么当前线程挂起，阻塞等待 t 完成任务
 - ReentrantLock#lockInterruptibly 当前线程发现锁被占用，阻塞等待锁
 - Object#wait 当前线程挂起，让出对象锁，阻塞，等待别的线程 notify
+- ......
+- 
+
+## 常见模式
+结合以上，很多时候对于线程执行任务来说都会涉及到运行-阻塞-中断这个流程，常见的模式如下：
+
+```
+static class InterruptibleTask implements Runnable {
+
+    @Override
+    public void run() {
+        try {
+            while (!Thread.interrupted()) {
+                // blocked method will throw InterruptedException
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            // be interrupted then leave
+        }
+    }
+}
+```
+- 运行过程中，如果阻塞在阻塞方法，遇到其他线程 interrupt 通过异常退出
+- 未阻塞在阻塞方法，通过下一轮循环任务的退出条件进行退出
