@@ -1,6 +1,6 @@
 ---
 layout: post_no_cmt
-title:  "Android：Lrucache 原理与小记"
+title:  "Android：Lrucache 原理"
 date:   2016-05-21 06:00:00 +0800
 categories: [android, java]
 ---
