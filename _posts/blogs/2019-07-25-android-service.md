@@ -4,6 +4,8 @@ title:  "Android Service 启动方式，生命周期，参数说明，混合启�
 date:   2019-07-25 00:06:00 +0800
 categories: [android]
 ---
+Last modified：2020-04-18
+
 
 # 两种启动方式
 
@@ -94,7 +96,8 @@ onStartCommand (Intent intent, int flags, int startId): int
 	- **注意：Activity 里面尽量明确 unbindService()，避免 ServiceConnectionLeaked**
 
 - onServiceDisconnected() 在连接正常关闭的情况下是不会被调用的，只在 Service 被破坏或被杀的时候
-- **onUnbind() 返回值：默认返回 false ，Client 先全断开后再绑定的情况，除了无法将 onRebind() 触发外，onUnbind() 方法也只会触发一次**。因此，如果需要 onUnbind() 每次全部解绑都会被调用，这个方法返回值需为 true
+- onUnbind() 默认返回值为 false，返回 true 会导致 onRebind() 方法的触发，触发条件是解除绑定的 Client 重新绑定。
+	- **注意：默认返回值 false 的情况除了无法触发 onRebind()，也无法在 Client 解绑再重新绑定的情况下触发 onUnbind()，换句话说，也是仅第一次触发。因此，要触发 onRebind() 以及触发 onUnbind() 每次，需要将 onUnbind() 返回值重写为 true**
 
 # 混合启动
 ## 先 startService，后 bindService
