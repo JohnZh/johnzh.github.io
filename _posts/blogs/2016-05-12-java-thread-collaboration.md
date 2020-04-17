@@ -1,10 +1,10 @@
 ---
 layout: post_no_cmt
 title:  "Java 并发：线程协作 wait/notify/sleep/yield/join"
-date:   2016-05-12 06:00:00 +0800
+date:   2016-05-12 18:00:00 +0800
 categories: [java]
 ---
-Last modified: 2020-04-15
+Last modified: 2020-04-18
 
 # 线程协作方法
 - `Object#wait`: 等待某个条件而使当前线程发生阻塞，条件由另外线程提供，释放对象锁，必须与 synchronized 一起使用（使用前提是必须 "拥有" 对象锁）
@@ -167,7 +167,7 @@ static class Customer implements Runnable {
 
 #### wiat 补充 
 - wait(0) 等于 wait()
-- wait(1000)，1000 毫秒后自动被 notify
+- wait(1000)，1000 毫秒后自动被 notify，也仍可以通过 notify 提前唤醒
 
 #### wait 信号量错失
 避免像这样的代码：
