@@ -4,7 +4,7 @@ title:  "Android 线程间通信：Handler/Message/MessageQueue/Looper"
 date:   2016-05-14 00:06:00 +0800
 categories: [android]
 ---
-Last modified: 2020-04-11
+Last modified: 2020-04-27
 
 # 举例
 ```
@@ -33,17 +33,20 @@ class Customer extends Thread {
     @Override
     public void run() {
         Looper.prepare();
-        mCustomerHandler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                int what = msg.what;
-                StringBuilder builder = new StringBuilder()
-                        .append("Get ").append(what).append(" from Producer");
-                Message message = mMainHandler.obtainMessage(0);
-                message.obj = builder.toString();;
-                message.sendToTarget();
-            }
-        };
+        synchronized (this) {
+            mCustomerHandler = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    int what = msg.what;
+                    StringBuilder builder = new StringBuilder()
+                            .append("Get ").append(what).append(" from Producer");
+                    Message message = mMainHandler.obtainMessage(0);
+                    message.obj = builder.toString();
+                    message.sendToTarget();
+                }
+            };
+            notify();
+        }
         Looper.loop();
         notify();
     }
@@ -60,13 +63,16 @@ class Producer extends Thread {
 
     @Override
     public void run() {
-        if (mCustomer.mCustomerHandler == null) {
-            try {
-                mCustomer.wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        synchronized (mCustomer) {
+            if (mCustomer.mCustomerHandler == null) {
+                try {
+                    mCustomer.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
+
         for (int i = 0; i <= 20; i++) {
             mCustomer.mCustomerHandler.sendEmptyMessageDelayed(i, 1000 * i);
         }
