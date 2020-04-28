@@ -4,7 +4,7 @@ title:  "Android View 知识点：创建，测量，布局，绘制"
 date:   2015-05-05 08:00:00 +0800
 categories: [android]
 ---
-Last modified: 2020-04-27
+Last modified: 2020-04-28
 
 # 从 XML 创建 View
 不论是 Activity#setContentView()，还是 LayoutInflater#inflate，还是 View#inflate
@@ -99,25 +99,209 @@ public View inflate(XmlPullParser parser, @Nullable ViewGroup root, boolean atta
 ```
 流程说明：
 1. 找到根节点开始标签
-2. 找到后，如果是 `<merge>`，合法性判断，调用 `LayoutInflater#rInflate`
+2. 找到后，如果是 `<merge>`，合法性判断，调用 `LayoutInflater#rInflate` 递归实例化所有的 View
 3. 非 `<merge>`，调用 `LayoutInflater#createViewFromTag` 创建根节点 View：temp
 4. 如果传入 root:ViewGroup != null，生成匹配 root 的布局参数 params，并且如果 attachToRoot:boolean == false，布局参数 params 会设置到 temp 里面
 5. 调用 `LayoutInflater#rInflateChildren` 进行子 View 的创建，实现也是调用了 `LayoutInflater#rInflate`
 6. 最后 root != null 且 attachToRoot，则 temp 会加到 root 里面。
 7. 或者，root == null 或者 不需要 attachToRoot，那么 temp 会作为结果返回
 
-再深入：
+
+再深入递归的实例化：
+
+```
+void rInflate(XmlPullParser parser, View parent, Context context,
+        AttributeSet attrs, boolean finishInflate) throws XmlPullParserException, IOException {
+
+    final int depth = parser.getDepth();
+    int type;
+    boolean pendingRequestFocus = false;
+
+    while (((type = parser.next()) != XmlPullParser.END_TAG ||
+            parser.getDepth() > depth) && type != XmlPullParser.END_DOCUMENT) {
+
+        if (type != XmlPullParser.START_TAG) {
+            continue;
+        }
+
+        final String name = parser.getName();
+
+        if (TAG_REQUEST_FOCUS.equals(name)) {
+            pendingRequestFocus = true;
+            consumeChildElements(parser);
+        } else if (TAG_TAG.equals(name)) {
+            parseViewTag(parser, parent, attrs);
+        } else if (TAG_INCLUDE.equals(name)) {
+            if (parser.getDepth() == 0) {
+                throw new InflateException("<include /> cannot be the root element");
+            }
+            parseInclude(parser, context, parent, attrs);
+        } else if (TAG_MERGE.equals(name)) {
+            throw new InflateException("<merge /> must be the root element");
+        } else {
+            final View view = createViewFromTag(parent, name, context, attrs);
+            final ViewGroup viewGroup = (ViewGroup) parent;
+            final ViewGroup.LayoutParams params = viewGroup.generateLayoutParams(attrs);
+            rInflateChildren(parser, view, attrs, true);
+            viewGroup.addView(view, params);
+        }
+    }
+
+    if (pendingRequestFocus) {
+        parent.restoreDefaultFocus();
+    }
+
+    if (finishInflate) {
+        parent.onFinishInflate();
+    }
+}
+```
 - `LayoutInflater#rInflate`：
-    - 最外层是 white 循环，跳出条件是当前 xml 定位已经是最外层且，是 xml 元素的结束点，或者文档结尾，总之就是 xml 布局文件遍历完成
+    - 最外层是 white 循环，跳出条件是当前 xml 定位已经是最外层，且是 xml 元素的结束点，或者文档结尾，总之就是 xml 布局文件遍历完成
     - 会优先判断并处理 `<requestFocus>`, `<tag>`, `<include>`,  `<merge>` 的情况
     - 非以上情况创建子调用 `LayoutInflater#createViewFromTag` 创建子 View，同时会生成 parentView 的布局参数，AddView 的时候一起设置
-    - 继续调用 `LayoutInflater#rInflateChildren` 递归创建添加这个 view 下面子 View
+    - 继续调用 `LayoutInflater#rInflateChildren` 递归创建并添加这个 view 下面子 View
+
+再看具体单独 View 的实例化
+```
+View createViewFromTag(View parent, String name, Context context, AttributeSet attrs,
+        boolean ignoreThemeAttr) {
+    if (name.equals("view")) {
+        name = attrs.getAttributeValue(null, "class");
+    }
+
+    // Apply a theme wrapper, if allowed and one is specified.
+    if (!ignoreThemeAttr) {
+        final TypedArray ta = context.obtainStyledAttributes(attrs, ATTRS_THEME);
+        final int themeResId = ta.getResourceId(0, 0);
+        if (themeResId != 0) {
+            context = new ContextThemeWrapper(context, themeResId);
+        }
+        ta.recycle();
+    }
+
+    if (name.equals(TAG_1995)) {
+        // Let's party like it's 1995!
+        return new BlinkLayout(context, attrs);
+    }
+
+    try {
+        View view;
+        if (mFactory2 != null) {
+            view = mFactory2.onCreateView(parent, name, context, attrs);
+        } else if (mFactory != null) {
+            view = mFactory.onCreateView(name, context, attrs);
+        } else {
+            view = null;
+        }
+
+        if (view == null && mPrivateFactory != null) {
+            view = mPrivateFactory.onCreateView(parent, name, context, attrs);
+        }
+
+        if (view == null) {
+            final Object lastContext = mConstructorArgs[0];
+            mConstructorArgs[0] = context;
+            try {
+                if (-1 == name.indexOf('.')) {
+                    view = onCreateView(parent, name, attrs);
+                } else {
+                    view = createView(name, null, attrs);
+                }
+            } finally {
+                mConstructorArgs[0] = lastContext;
+            }
+        }
+
+        return view;
+    }
+    
+    ......
+}
+```
 - `LayoutInflater#createViewFromTag`：
     - 会先处理`<view>`，系统主题的应用，`<blink>`(通过 handler/message 实现闪烁的布局)
     - 接着，使用 `LayoutInflater.mFactory`，`LayoutInflater.mFactory2` 的 `onCreateView` 来创建 View。
         - 这两个 Factory 是抽象类，在系统控件的样式兼容上使用非常多。具体查看 `AppCompatActivity#onCreate` 的 `delegate.installViewFactory()` 以及 delegate 的实现类 `AppCompatDelegateImpl`
         - 开发者也可以使用 Factory 自定义全局的控件属性
-    - 最后，Factory 如果没有创建 View，调用 `LayoutInflater#onCreateView` 通过反射创建 View
+    - 最后，Factory 如果不存在，或者没有创建 View，那么调用 `LayoutInflater#onCreateView`，继而调用到 `LayoutInflater#createView` 通过 classLoader 加载 View 的反射类，再通过反射类的构造器实例化 View 对象。详细内容参考下方代码
+
+```
+protected View onCreateView(String name, AttributeSet attrs)
+        throws ClassNotFoundException {
+    return createView(name, "android.view.", attrs);
+}
+
+public final View createView(String name, String prefix, AttributeSet attrs)
+        throws ClassNotFoundException, InflateException {
+    Constructor<? extends View> constructor = sConstructorMap.get(name);
+    if (constructor != null && !verifyClassLoader(constructor)) {
+        constructor = null;
+        sConstructorMap.remove(name);
+    }
+    Class<? extends View> clazz = null;
+
+    try {
+        Trace.traceBegin(Trace.TRACE_TAG_VIEW, name);
+
+        if (constructor == null) {
+            // Class not found in the cache, see if it's real, and try to add it
+            clazz = mContext.getClassLoader().loadClass(
+                    prefix != null ? (prefix + name) : name).asSubclass(View.class);
+
+            if (mFilter != null && clazz != null) {
+                boolean allowed = mFilter.onLoadClass(clazz);
+                if (!allowed) {
+                    failNotAllowed(name, prefix, attrs);
+                }
+            }
+            constructor = clazz.getConstructor(mConstructorSignature);
+            constructor.setAccessible(true);
+            sConstructorMap.put(name, constructor);
+        } else {
+            // If we have a filter, apply it to cached constructor
+            if (mFilter != null) {
+                // Have we seen this name before?
+                Boolean allowedState = mFilterMap.get(name);
+                if (allowedState == null) {
+                    // New class -- remember whether it is allowed
+                    clazz = mContext.getClassLoader().loadClass(
+                            prefix != null ? (prefix + name) : name).asSubclass(View.class);
+
+                    boolean allowed = clazz != null && mFilter.onLoadClass(clazz);
+                    mFilterMap.put(name, allowed);
+                    if (!allowed) {
+                        failNotAllowed(name, prefix, attrs);
+                    }
+                } else if (allowedState.equals(Boolean.FALSE)) {
+                    failNotAllowed(name, prefix, attrs);
+                }
+            }
+        }
+
+        Object lastContext = mConstructorArgs[0];
+        if (mConstructorArgs[0] == null) {
+            // Fill in the context if not already within inflation.
+            mConstructorArgs[0] = mContext;
+        }
+        Object[] args = mConstructorArgs;
+        args[1] = attrs;
+
+        final View view = constructor.newInstance(args);
+        if (view instanceof ViewStub) {
+            // Use the same context when inflating ViewStub later.
+            final ViewStub viewStub = (ViewStub) view;
+            viewStub.setLayoutInflater(cloneInContext((Context) args[0]));
+        }
+        mConstructorArgs[0] = lastContext;
+        return view;
+
+    }
+    
+    ......
+}
+
+```
 
 浅出：
 
