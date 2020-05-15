@@ -20,6 +20,9 @@ B 站下载助手|B 站视频下载工具|
 有道划词插件|有道词典Chrome划词插件，挺好用|
 Quick QR|文字网址快速生成二维码，支持右键菜单|
 Grammarly|语法纠错工具|
+OneTab|把所有 Tab 整理成一个，提高阅读集中力，减少资源浪费|
+GPeeker|鼠标悬停在链接上，点 shift 快速浏览内容而不用打开链接，再点 shift 打开链接|
+Search the current site|使用 Google 搜索当前网站，等价于 Google xx site:当前网站|
 油猴 Tampermonkey|脚本插件，强化网页功能|[ 脚本网站](https://greasyfork.org/zh-CN) / [开车脚本网](https://sleazyfork.org/zh-CN)
 
 
@@ -32,6 +35,7 @@ Postman Interceptor| 拦截器，配合 postman 使用
 JSONView|请求返回的 json 数据用树状展展示|
 Octotree|Github 项目树状展开查看，方便读开源代码|
 Codota|查找 Java 代码段的插件，IDE 上也有| 
+Link Redirect Trace|重定向追踪|
 
 # 快捷键
 
