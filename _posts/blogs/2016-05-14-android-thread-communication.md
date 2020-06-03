@@ -286,7 +286,7 @@ boolean enqueueMessage(Message msg, long when) {
 ```
 - 由于经历 `Hanler#send*` --> `Handler#sendMessageAtTime` --> `Handler#enqueueMessage` --> `MessageQueue#enqueueMessage`，显然由于 `Hanler#send*` 涉及到多线程，`MessageQueue#enqueueMessage` 必然涉及到线程安全，synchronized 包裹了消息入队操作过程
 - MQ 在 Quitting 一般是由于 Looper#quit，消息回收，不入队
-- 消息标记在用，设置 when (当前时间或者当前时间+延时)，指针指向消息队列头部
+- 消息标记为“在用”，设置 when (当前时间或者当前时间+延时)，指针指向消息队列头部
     - 这里的消息队列用的还是 Message 的数据结构，链表
 - 消息的插入是按照 when 时间序的
 
