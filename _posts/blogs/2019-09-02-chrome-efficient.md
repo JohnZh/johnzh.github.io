@@ -23,6 +23,7 @@ Grammarly|语法纠错工具|
 OneTab|把所有 Tab 整理成一个，提高阅读集中力，减少资源浪费|
 GPeeker|鼠标悬停在链接上，点 shift 快速浏览内容而不用打开链接，再点 shift 打开链接|
 Search the current site|使用 Google 搜索当前网站，等价于 Google xx site:当前网站|
+Tab Resize split screeb layouts|Chrome tab 分屏插件|
 油猴 Tampermonkey|脚本插件，强化网页功能|[ 脚本网站](https://greasyfork.org/zh-CN) / [开车脚本网](https://sleazyfork.org/zh-CN)
 
 
