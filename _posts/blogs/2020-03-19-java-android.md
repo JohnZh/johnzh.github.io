@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Java & Android 相关......"
+title:  "Java & Android 相关..."
 date:   2020-03-19 00:00:00 +0800
 permalink: /java/fragment
 categories: [blogs]
