@@ -1,6 +1,6 @@
 ---
 layout: post_no_cmt
-title:  "更好用的 Chrome：插件，快捷键（持续更新）"
+title:  "更好用的 Chrome：插件（持续更新），快捷键"
 date:   2019-09-02 00:06:00 +0800
 categories: [blogs]
 ---
@@ -12,6 +12,7 @@ categories: [blogs]
 ---|---|---
 Picture in Picture for every website|所有网站的视频都能画中画，打开其他软件的时候，画中画依然在最前面|
 Dualsub|Youtube 上下两行双语字幕，需要打开字幕开关|
+CapTube|Youtube 双语字幕，Dualsub 失效了，用这个替代|
 扩展管理|一个列表显示所有的插件，开关卸载都很方便| [webstore](https://chrome.google.com/webstore/detail/%E6%89%A9%E5%B1%95%E7%AE%A1%E7%90%86/jijileelaefjahodboljljdgfpbjjlac/related?hl=zh-CN)
 Astar VPN chrome store|免费的 VPN，网速一般，总比没有强|
 Undo closed tabs|查看关闭的标签页，支持快捷键|
