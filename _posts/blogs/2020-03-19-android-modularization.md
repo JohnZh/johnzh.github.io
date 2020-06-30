@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Android 开发：组件化开发"
+title:  "组件化"
 date:   2020-03-19 00:00:00 +0800
 categories: []
 ---

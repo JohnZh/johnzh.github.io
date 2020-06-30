@@ -2,7 +2,7 @@
 layout: post
 title:  "解决升级 Android Studio 3.6.1 后无法运行 Java 代码的问题"
 date:   2020-03-20 00:06:00 +0800
-categories: [android, java]
+categories: [java]
 ---
 
 
