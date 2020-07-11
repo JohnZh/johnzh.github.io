@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: post_no_cmt
 title:  "从 0 到 1 组件化项目，路由原理"
 date:   2020-03-19 00:00:00 +0800
 categories: [android]
