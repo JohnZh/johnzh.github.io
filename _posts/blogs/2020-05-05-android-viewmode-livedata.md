@@ -12,7 +12,7 @@ Android 框架中 Activity/Fragment 属于界面管理器。Android 系统会管
 
 对于简单的数据，Activity 可以使用 onSaveInstanceState() 保存（序列化）数据，并在 onCreate() 中恢复数据。**但是这个方法只适合少量数据，而不适合数量较大的数据，如列表和位图**
 
-另一个问题，界面控制器会经常进行异步调用，调用会需要一些时间才能返回结果，**界面控制器需要管理异步调用调用，确保系统在销毁界面控制器之后清理这些调用以免潜在内存泄露**。这个管理工作十分巨大。
+另一个问题，界面控制器会经常进行异步调用，调用会需要一些时间才能返回结果，**界面控制器需要管理异步调用，确保系统在销毁界面控制器之后清理这些调用以免潜在内存泄露**。这个管理工作十分巨大。
 
 界面控制器的异步调用还有一个问题，**界面控制器因系统原因重建的情况下，异步调用会重新发送，造成资源浪费**
 
@@ -58,6 +58,22 @@ protected void onCreate(Bundle savedInstanceState) {
     });
 }
 ```
+
+# 先写原理再看源码
+
+## ViewModel
+
+ViewModel 作用在于保存数据在进程中，防止 Activity 由于内存释放而导致数据的丢失。核心原理在于 ViewModelProvider 持有的 ViewModelStore，ViewModelStore 是一个 Key 为固定字符串 + 自定义 ViewModel 类名，Value 为 ViewModel 的 HashMap 包装类。
+
+在 Activity 由于内存释放的时候，ViewModelStore 会被保存到代表这个 Activity 的 ActivityClientRecord 对象里面，这个对象又是当前线程持有的，等到 Activity 恢复后，数据就可以反方向从 ActivityClientRecord 对象里面再取出来恢复。
+
+## LiveData
+
+简单的说，LiveData 为组件（eg. Activity）生命周期和数据变化的双重观察者，当数据发生变化时，set/postValue，会在合适的生命周期状态下通知“数据订阅者”，当生命周期发生变化时，“订阅者的包装”会被通知，而“订阅者的包装”会根据当前生命周期状态以及数据是否发生了变化去通知“数据订阅者”。
+
+这就免去了开发者在数据变化事件的通知和生命周期管理这件事件上的工作。同时，LiveData 还直接实现了粘性事件，即先发生事件，后注册观察者，观察者依然可以接收到先发生的事件
+
+# 源码分析
 
 ## ViewModel 之 ViewModelProvider 与 ViewModelStore
 
@@ -732,4 +748,3 @@ private void considerNotify(ObserverWrapper observer) {
 
 # 调用总图
 ![LiveData 调用总图](https://img-blog.csdnimg.cn/20200505014540217.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3d5enhrODg4,size_16,color_FFFFFF,t_70)
-
