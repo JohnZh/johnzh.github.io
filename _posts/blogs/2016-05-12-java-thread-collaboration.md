@@ -46,6 +46,10 @@ static class Goods {
 static class Store {
     List<Goods> goodList = new LinkedList<>();
     Producer producer;
+    int MAX_GOODS_SIZE = 5;
+    ExecutorService service = Executors.newCachedThreadPool();
+    boolean closed;
+
 
     public Store(Producer producer) {
         this.producer = producer;
