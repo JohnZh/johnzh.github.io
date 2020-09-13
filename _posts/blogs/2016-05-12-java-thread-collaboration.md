@@ -23,10 +23,11 @@ Last modified: 2020-09-13
 假设有一个生产者和三个消费者：
 
 ```
-// main:
-Store store = new Store(new Producer());
-for (int i = 0; i < 3; i++) {
-    store.welcome(new Customer(i));
+public static void execute() {
+    Store store = new Store(new Producer());
+    for (int i = 0; i < 3; i++) {
+        store.welcome(new Customer(i));
+    }
 }
 
 static class Goods {
@@ -45,8 +46,6 @@ static class Goods {
 static class Store {
     List<Goods> goodList = new LinkedList<>();
     Producer producer;
-    int MAX_GOODS_SIZE = 5;
-    ExecutorService service = Executors.newCachedThreadPool();
 
     public Store(Producer producer) {
         this.producer = producer;
@@ -59,7 +58,12 @@ static class Store {
         service.execute(customer);
     }
 
+    public boolean isClosed() {
+        return closed;
+    }
+
     public void close() {
+        closed = true;
         service.shutdownNow();
     }
 
@@ -87,35 +91,35 @@ static class Store {
 
 static class Producer implements Runnable {
     Store store;
-    int idCounter;
+    int count;
 
     @Override
     public void run() {
-        try {
-            while (!Thread.interrupted()) {
-                synchronized (store) {
-                    if (!store.isFull()) {
-                        Goods goods = new Goods(idCounter++);
-                        store.add(goods);
-                        System.out.println("Producer add " + goods + " | " + store);
-                        store.notifyAll();
-
-                        if (idCounter == 20) {
-                            System.out.println("Producer finish today.");
-                            store.close();
-                            return;
-                        }
-                    } else {
-                        System.out.println("Producer wait.");
+        while (true) {
+            synchronized (store) {
+                if (!store.isFull()) {
+                    Goods goods = new Goods(count++);
+                    store.add(goods);
+                    System.out.println("Producer add " + goods + " | " + store);
+                    store.notifyAll();
+                } else {
+                    try {
                         store.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
-                if (idCounter % 2 != 0) {
-                    Thread.yield();
+
+                if (count == 20) {
+                    System.out.println("Producer finish today.");
+                    store.close();
+                    return;
                 }
+            } // sync
+
+            if ((count & 1) == 0) {
+                Thread.yield();
             }
-        } catch (InterruptedException e) {
-            System.out.println("Producer " + " interrupted.");
         }
     }
 }
@@ -135,22 +139,26 @@ static class Customer implements Runnable {
 
     @Override
     public void run() {
-        try {
-            while (!Thread.interrupted()) {
-                synchronized (store) {
-                    if (!store.isEmpty()) {
-                        Goods goods = store.get();
-                        System.out.println(this + " consume " + goods + " | " + store);
-                        store.notifyAll();
-                    } else {
-                        System.out.println(this + " wait.");
+        while (true) {
+            synchronized (store) {
+                if (!store.isEmpty()) {
+                    Goods goods = store.get();
+                    System.out.println(this + " consume " + goods + " | " + store);
+                    store.notifyAll();
+                } else if (store.isClosed()) {
+                    System.out.println("Store closed. " + this + " leave.");
+                    return;
+                } else {
+                    System.out.println(this + " wait.");
+                    try {
                         store.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        return;
                     }
                 }
-                Thread.yield();
-            }
-        } catch (InterruptedException e) {
-            System.out.println(this + " interrupted.");
+            } // sync
+            Thread.yield();
         }
     }
 }
@@ -158,7 +166,7 @@ static class Customer implements Runnable {
 - 使用 yeild 使线程切换更明显
 - 生产者生产完最后一件商品通知完消费者后直接 shutdownNow 线程池
     - shutdownNow 和 shutdown 不同，shutdownNow 会对线程进行 interrupt，而 shutdown 会等待线程全部完成。
-    - 消费者没有设置和生产者一样的退出机制 return。因此只能通过线程池的 interrupt 来退出
+    - 消费者没有设置和生产者一样的退出机制。因此只能通过线程池的 interrupt 来退出
 - 消费者收到线程池的 interrupt 后
     - 阻塞的会通过异常捕获退出
     - 非阻塞的消费完成后通过下一个循环条件退出
@@ -180,9 +188,9 @@ while(condition) {
     }
 }
 ```
-多线程的情况下，当有线程已经被 wait 阻塞的时候，可能有其他线程处于 **while(condition)** 的位置
+多线程的情况下，当有线程 a 已经被 wait 阻塞的时候，可能有其他线程 b 处于 **while(condition)** 的位置
 
-此时如果有线程进行了 notify，改变了 condition 为 false，那么处于这个区间的线程会错过 condition 的改变，继续进入 wait 导致的阻塞，死锁。
+此时如果有线程 c 进行了 notify 并改变了 condition 为 false，那么线程 b 会错过 condition 的改变，继续进入 wait 导致的阻塞。同时会对其他想获取锁的线程造成死锁。
 
 合适的写法：
 
