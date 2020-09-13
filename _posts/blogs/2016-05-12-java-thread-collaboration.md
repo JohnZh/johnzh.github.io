@@ -4,11 +4,11 @@ title:  "Java 并发：线程协作 wait/notify/sleep/yield/join"
 date:   2016-05-12 18:00:00 +0800
 categories: [java]
 ---
-Last modified: 2020-04-18
+Last modified: 2020-09-13
 
 # 线程协作方法
 - `Object#wait`: 等待某个条件而使当前线程发生阻塞，条件由另外线程提供，释放对象锁，必须与 synchronized 一起使用（使用前提是必须 "拥有" 对象锁）
-- `Object#notify`, `Object#notifyAll`: 通知由于 wait 阻塞的特定或者全部线程条件已达成，可运行，释放对象锁，必须与 synchronized 一起使用
+- `Object#notify`, `Object#notifyAll`: 通知由于 wait 阻塞的特定或者全部线程条件已达成，注意，做两个方法**不会主动释放锁**，这意味着调用 wait 的线程要继续执行还需要等获取到锁后才会继续执行
 - Thread#sleep: 线程休眠阻塞固定时间，让出 cpu，不释放对象锁
 - Thread#yield: 线程主动让出 cpu 给其他线程使用，无固定时间，也不保证马上就让出，因此在少量场景下使用该方法，而主要用于 debug 和 test
 - Thread#join: 当前线程等待另外一个线程执行完后再执行
