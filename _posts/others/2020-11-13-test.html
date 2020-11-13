@@ -16,6 +16,14 @@ layout: default
 	<style>
 		body{-webkit-font-smoothing: antialiased; font-family: "Hiragino Sans", "Noto Sans JP", メイリオ, Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;color: #2d2d2d; }
 	</style>
+</head>
+
+<body>
+    <a id="mcd-redirect-link" href="intent://mcd/#Intent;scheme=mcdonaldsjp;package=jp.co.mcdonalds.android.staging;end" style="font-size: 80px;" onclick="window.alert('Javascript click the link automatically!')">deep link here</a>
+    
+    <h2>Redirecting...</h2>
+    <p>You will be redirected in a few moments.</p>
+
     <script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
     <script>
         $(document).ready(function(){
@@ -23,14 +31,5 @@ layout: default
             $('#mcd-redirect-link').trigger('click');
         });
     </script>
-
-</head>
-
-<body>
-
-    <a id="mcd-redirect-link" href="intent://mcd/#Intent;scheme=mcdonaldsjp;package=jp.co.mcdonalds.android.staging;end" style="font-size: 80px;" onclick="window.alert('Javascript click the link automatically!')">deep link here</a>
-    
-        <h2>Redirecting...</h2>
-        <p>You will be redirected in a few moments.</p>
 </body>
 </html>
