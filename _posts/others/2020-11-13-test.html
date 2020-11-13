@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta http-equiv='X-UA-Compatible' content='IE=edge' />
+	<meta content='true' name='HandheldFriendly' />
+	<meta content='yes' name='apple-mobile-web-app-capable' />
+	<meta content='black' name='apple-mobile-web-app-status-bar-style' />
+	<meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=no' />
+	<title>McDonald's Japan</title>
+	<style>
+		body{-webkit-font-smoothing: antialiased; font-family: "Hiragino Sans", "Noto Sans JP", メイリオ, Meiryo, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;color: #2d2d2d; }
+	</style>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            'event': 'url-redirect',
+            'referral': document.referrer,
+            'environment': 'staging',
+            'destination_url': 'mcdonaldsjp://coupons?cat=hm&i1=3623',
+            'eventCallback': function () {
+                // var a = document.createElement("a");
+                // a.href = 'mcdonaldsjp://coupons?cat=hm&i1=3623';
+                    // a.download = filename;
+                    // document.body.appendChild(a);
+                    // a.click();
+                // document.location = 'https://developer.android.com/training/app-links/verify-site-associations?authuser=0';
+                // document.getElementById("mcd-redirect-link").click();
+                var clickTarget = document.getElementById("mcd-redirect-link");
+                var fakeMouseEvent = document.createEvent('MouseEvents');
+                fakeMouseEvent.initMouseEvent("click", true, true, window,
+                    0, 0, 0, 20, 10, false, false, false, false, 0, null);
+
+                clickTarget.dispatchEvent(fakeMouseEvent);
+            }
+        });
+    </script>
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-M24W5BZ');</script>
+</head>
+
+<body>
+    <a id="mcd-redirect-link" href="mcdonaldsjp://coupons?cat=hm&i1=3623" style="font-size: 80px;" onclick="window.alert('Javascript click the link automatically!')">deep link here</a>
+    <iframe src="mcdonaldsjp://coupons?cat=hm&i1=3623">deep link in iframe</iframe>
+	<div style="padding:16px 32px;margin:16px;text-align:center;">
+        <img src="https://www.mcdonalds.co.jp/assets/images/footer-logo.svg" width="100px" />
+    </div>
+    <div style="">
+        <div style="padding:16px 32px;margin:16px;text-align:center;">
+            <picture class="relative">
+                <source type="image/webp" srcset="https://www.mcdonalds.co.jp/assets/images/loading_burger.webp">
+                <source srcset="https://www.mcdonalds.co.jp/assets/images/loading_burger.gif">
+                <img class="" src="https://www.mcdonalds.co.jp/assets/images/loading_burger.gif" style="width:150px" />
+            </picture>
+            <h2>Redirecting...</h2>
+            <p>You will be redirected in a few moments.</p>
+        </div>
+    </div>
+</body>
+</html>
