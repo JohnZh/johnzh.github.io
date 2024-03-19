@@ -53,6 +53,9 @@ plugins:
 #   - vendor/gems/
 #   - vendor/ruby/
 
+include:
+  - .well-known
+
 # Gitalk settings
 github_client_id: e636cea1512015758e0b
 github_client_secret: 60d4dc7d40587b2a430d6301194024d1a4c47928
