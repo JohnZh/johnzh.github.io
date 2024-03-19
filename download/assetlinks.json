@@ -1,0 +1,9 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "jp.co.kakuyasu.app.dev",
+    "sha256_cert_fingerprints":
+    ["A0:3B:DE:31:83:F2:B4:59:74:E4:B9:69:B4:D3:F1:D8:37:30:C7:B9:8E:6E:DD:9E:7E:93:D6:65:9C:98:09:E1"]
+  }
+}]
